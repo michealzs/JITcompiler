@@ -1,0 +1,1 @@
+rm parser.c parser.output parser.tab.h scanner.c tokens.h listing.o scanner.o
