@@ -59,6 +59,14 @@ double evaluateRelational(double left, Operators operator_, double right) {
         case NOTEQUAL:
             result = left != right;
             break;
+        case OR:
+            return left != 0 || right != 0;
+            break;
+        case NOT:
+            return right == 0 ? 1 : 0;
+            break;
 	}
 	return result;
 }
+
+

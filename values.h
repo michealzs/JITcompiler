@@ -14,4 +14,3 @@ enum Operators {ADD, SUBTRACT, MULTIPLY, DIVIDE, MODULO, EXPONENT, NEGATE,
 
 double evaluateArithmetic(double left, Operators operator_, double right);
 double evaluateRelational(double left, Operators operator_, double right);
-

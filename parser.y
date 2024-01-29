@@ -42,20 +42,20 @@ double result;
 
 %token <iden> IDENTIFIER
 
-%token <value> INT_LITERAL CHAR_LITERAL REAL_LITERAL HEX_LITERAL
+%token <value> INT_LITERAL CHAR_LITERAL REAL_LITERAL HEX_LITERAL FLOAT_LITERAL
 
-%token <oper> ADDOP MULOP ANDOP RELOP EXPOP REMOP NEGOP MODOP
+%token <oper> ADDOP MULOP ANDOP RELOP EXPOP REMOP NEGOP MODOP NOTOP OROP
 
 %token ARROW
 
-%token BEGIN_ CASE CHARACTER ELSE END ENDSWITCH FUNCTION INTEGER IS LIST OF OTHERS RETURNS SWITCH WHEN REAL IF THEN ELSIF ENDIF FOLD ENDFOLD LEFT RIGHT
+%token BEGIN_ CASE CHARACTER ELSE END ENDSWITCH FUNCTION INTEGER IS LIST OF OTHERS RETURNS SWITCH WHEN REAL IF THEN ELSIF ENDIF FOLD ENDFOLD LEFT RIGHT 
 
-%token <boolean_value> NOTOP OROP
-
-%type <value> body statement_ statement cases case expression term primary
-	 condition relation 
+%type <value> body statement_ statement cases case expression term primary condition relation 
 
 %type <list> list expressions
+
+%type <oper> arithmetic_operator
+
 
 
 %%
@@ -68,6 +68,7 @@ function_header:
 
 type:
 	INTEGER |
+	REAL |
 	CHARACTER ;
 	
 optional_variable:
@@ -93,6 +94,7 @@ statement_:
 	error ';' {$$ = 0;} ;
     
 statement:
+	WHEN condition {$$ = $2;}|
 	expression |
 	WHEN condition ',' expression ':' expression {$$ = $2 ? $4 : $6;} |
 	SWITCH expression IS cases OTHERS ARROW statement ';' ENDSWITCH
@@ -106,24 +108,43 @@ case:
 
 condition:
 	condition ANDOP relation {$$ = $1 && $2;} |
-	relation ;
+	condition OROP relation {$$ = $1 || $3; }|
+	NOTOP condition { $$ = !$2; }|
+	relation { $$ = $1; };
 
 relation:
 	'(' condition ')' {$$ = $2;} |
 	expression RELOP expression {$$ = evaluateRelational($1, $2, $3);} ;
 
+
 expression:
+	'(' expression ')' { $$ = $2; }|
+   expression arithmetic_operator expression { $$ = evaluateArithmetic($1, $2, $3); }|
+   NEGOP expression { $$ = -$2; }|
+   INT_LITERAL { $$ = $1; }|
+   CHAR_LITERAL { $$ = $1; }|
+   REAL_LITERAL { $$ = $1; }|
+   HEX_LITERAL { $$ = $1; }|
+   FLOAT_LITERAL { $$ = $1; }|
 	expression ADDOP term {$$ = evaluateArithmetic($1, $2, $3);} |
 	term ;
-      
+
+arithmetic_operator:
+    ADDOP | MULOP | MODOP | EXPOP ;
+
 term:
+	term EXPOP primary {$$ = evaluateArithmetic($1, $2, $3);}  |
 	term MULOP primary {$$ = evaluateArithmetic($1, $2, $3);}  |
+	term MODOP primary {$$ = evaluateArithmetic($1, $2, $3);}  |
 	primary ;
 
 primary:
 	'(' expression ')' {$$ = $2;} |
 	INT_LITERAL | 
 	CHAR_LITERAL |
+	REAL_LITERAL |
+   HEX_LITERAL |
+   FLOAT_LITERAL |
 	IDENTIFIER '(' expression ')' {$$ = extract_element($1, $3); } |
 	IDENTIFIER {if (!scalars.find($1, $$)) appendError(UNDECLARED, $1);} ;
 
