@@ -50,7 +50,7 @@ double result;
 
 %token BEGIN_ CASE CHARACTER ELSE END ENDSWITCH FUNCTION INTEGER IS LIST OF OTHERS RETURNS SWITCH WHEN REAL IF THEN ELSIF ENDIF FOLD ENDFOLD LEFT RIGHT 
 
-%type <value> body statement_ statement cases case expression term primary condition relation 
+%type <value> body statement_ statement  expression term primary condition relation if_statement elsif_clauses
 
 %type <list> list expressions
 
@@ -72,8 +72,14 @@ type:
 	CHARACTER ;
 	
 optional_variable:
-	variable |
-	%empty ;
+	variables |
+	%empty |
+	error ';';
+
+variables:
+	variable variables |
+	%empty |
+	error ';';
 	
 variable:	
 	IDENTIFIER ':' type IS statement ';' {scalars.insert($1, $5);}; |
@@ -96,15 +102,16 @@ statement_:
 statement:
 	WHEN condition {$$ = $2;}|
 	expression |
-	WHEN condition ',' expression ':' expression {$$ = $2 ? $4 : $6;} |
-	SWITCH expression IS cases OTHERS ARROW statement ';' ENDSWITCH
-		{$$ = !isnan($4) ? $4 : $7;} ;
-cases:
-	cases case {$$ = !isnan($1) ? $1 : $2;} |
-	%empty {$$ = NAN;} ;
-	
-case:
-	CASE INT_LITERAL ARROW statement ';' {$$ = $<value>-2 == $2 ? $4 : NAN;} ; 
+	WHEN condition ',' expression ':' expression {$$ = $2 ? $4 : $6;} | 
+	if_statement ;
+
+if_statement:
+    IF condition THEN statement_ elsif_clauses ENDIF { $$ = $2 ? $4 : $5; }|
+    IF condition THEN statement_ elsif_clauses ELSE statement_ ENDIF { $$ = $2 ? $4 : ($5 ? $5 : $7); };
+
+elsif_clauses:
+    %empty { $$ = 0; }|  
+    ELSIF condition THEN statement_ elsif_clauses { $$ = $2 ? $4 : $5; } ;
 
 condition:
 	condition ANDOP relation {$$ = $1 && $2;} |
