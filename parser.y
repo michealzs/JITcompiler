@@ -19,6 +19,9 @@ using namespace std;
 #include "listing.h"
 #include "symbols.h"
 
+double* params;
+int countParams = 0; 
+
 int yylex();
 void yyerror(const char* message);
 double extract_element(CharPtr list_name, double subscript);
@@ -64,7 +67,18 @@ function:
 	function_header optional_variable  body ';' {result = $3;} ;
 	
 function_header:	
-	FUNCTION IDENTIFIER RETURNS type ';' ;
+	FUNCTION IDENTIFIER RETURNS type ';' |
+	FUNCTION IDENTIFIER parameters RETURNS type ';' | 
+	error ';' ;
+
+parameters:
+    parameter more_parameters ;
+
+more_parameters:
+    ',' parameter more_parameters | %empty ;
+
+parameter:
+    IDENTIFIER ':' type { scalars.insert($1, params[countParams++]);};
 
 type:
 	INTEGER |
@@ -170,9 +184,14 @@ double extract_element(CharPtr list_name, double subscript) {
 }
 
 int main(int argc, char *argv[]) {
+	params = new double[argc - 1];
+    for (int i = 1; i < argc; ++i) {
+        params[i - 1] = atof(argv[i]);
+    }
 	firstLine();
 	yyparse();
 	if (lastLine() == 0)
 		cout << "Result = " << result << endl;
+	delete[] params; 
 	return 0;
 } 
