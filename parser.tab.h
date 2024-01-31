@@ -105,13 +105,14 @@ union YYSTYPE
 {
 #line 37 "parser.y"
 
+	int direction;
 	int boolean_value;
 	CharPtr iden;
 	Operators oper;
 	double value;
 	vector<double>* list;
 
-#line 115 "parser.tab.h"
+#line 116 "parser.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

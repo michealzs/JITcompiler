@@ -6,10 +6,6 @@ Terminals unused in grammar
     ENDSWITCH
     OTHERS
     SWITCH
-    FOLD
-    ENDFOLD
-    LEFT
-    RIGHT
 
 
 State 4 conflicts: 1 reduce/reduce
@@ -19,13 +15,13 @@ State 36 conflicts: 12 reduce/reduce
 State 37 conflicts: 12 reduce/reduce
 State 38 conflicts: 12 reduce/reduce
 State 39 conflicts: 12 reduce/reduce
-State 48 conflicts: 3 shift/reduce
-State 60 conflicts: 4 shift/reduce
-State 70 conflicts: 7 shift/reduce
-State 83 conflicts: 2 shift/reduce
-State 91 conflicts: 12 reduce/reduce
-State 98 conflicts: 3 shift/reduce
-State 99 conflicts: 4 shift/reduce
+State 50 conflicts: 3 shift/reduce
+State 62 conflicts: 4 shift/reduce
+State 75 conflicts: 7 shift/reduce
+State 88 conflicts: 2 shift/reduce
+State 98 conflicts: 12 reduce/reduce
+State 105 conflicts: 3 shift/reduce
+State 106 conflicts: 4 shift/reduce
 
 
 Grammar
@@ -74,82 +70,91 @@ Grammar
    27          | expression
    28          | WHEN condition ',' expression ':' expression
    29          | if_statement
+   30          | fold_statement
 
-   30 if_statement: IF condition THEN statement_ elsif_clauses ENDIF
-   31             | IF condition THEN statement_ elsif_clauses ELSE statement_ ENDIF
+   31 fold_statement: FOLD direction arithmetic_operator list_choice ENDFOLD
 
-   32 elsif_clauses: ε
-   33              | ELSIF condition THEN statement_ elsif_clauses
+   32 direction: LEFT
+   33          | RIGHT
 
-   34 condition: condition ANDOP relation
-   35          | condition OROP relation
-   36          | NOTOP condition
-   37          | relation
+   34 list_choice: list
+   35            | IDENTIFIER
 
-   38 relation: '(' condition ')'
-   39         | expression RELOP expression
+   36 if_statement: IF condition THEN statement_ elsif_clauses ENDIF
+   37             | IF condition THEN statement_ elsif_clauses ELSE statement_ ENDIF
 
-   40 expression: '(' expression ')'
-   41           | expression arithmetic_operator expression
-   42           | NEGOP expression
-   43           | INT_LITERAL
-   44           | CHAR_LITERAL
-   45           | REAL_LITERAL
-   46           | HEX_LITERAL
-   47           | FLOAT_LITERAL
-   48           | expression ADDOP term
-   49           | term
+   38 elsif_clauses: ε
+   39              | ELSIF condition THEN statement_ elsif_clauses
 
-   50 arithmetic_operator: ADDOP
-   51                    | MULOP
-   52                    | MODOP
-   53                    | EXPOP
+   40 condition: condition ANDOP relation
+   41          | condition OROP relation
+   42          | NOTOP condition
+   43          | relation
 
-   54 term: term EXPOP primary
-   55     | term MULOP primary
-   56     | term MODOP primary
-   57     | primary
+   44 relation: '(' condition ')'
+   45         | expression RELOP expression
 
-   58 primary: '(' expression ')'
-   59        | INT_LITERAL
-   60        | CHAR_LITERAL
-   61        | REAL_LITERAL
-   62        | HEX_LITERAL
-   63        | FLOAT_LITERAL
-   64        | IDENTIFIER '(' expression ')'
-   65        | IDENTIFIER
+   46 expression: '(' expression ')'
+   47           | expression arithmetic_operator expression
+   48           | NEGOP expression
+   49           | INT_LITERAL
+   50           | CHAR_LITERAL
+   51           | REAL_LITERAL
+   52           | HEX_LITERAL
+   53           | FLOAT_LITERAL
+   54           | expression ADDOP term
+   55           | term
+
+   56 arithmetic_operator: ADDOP
+   57                    | MULOP
+   58                    | MODOP
+   59                    | EXPOP
+
+   60 term: term EXPOP primary
+   61     | term MULOP primary
+   62     | term MODOP primary
+   63     | primary
+
+   64 primary: '(' expression ')'
+   65        | INT_LITERAL
+   66        | CHAR_LITERAL
+   67        | REAL_LITERAL
+   68        | HEX_LITERAL
+   69        | FLOAT_LITERAL
+   70        | IDENTIFIER '(' expression ')'
+   71        | IDENTIFIER
 
 
 Terminals, with rules where they appear
 
     $end (0) 0
-    '(' (40) 20 38 40 58 64
-    ')' (41) 20 38 40 58 64
+    '(' (40) 20 44 46 64 70
+    ')' (41) 20 44 46 64 70
     ',' (44) 6 21 28
     ':' (58) 8 18 19 28
     ';' (59) 1 2 3 4 14 17 18 19 24 25
     error (256) 4 14 17 25
-    IDENTIFIER <iden> (258) 2 3 8 18 19 64 65
-    INT_LITERAL <value> (259) 43 59
-    CHAR_LITERAL <value> (260) 44 60
-    REAL_LITERAL <value> (261) 45 61
-    HEX_LITERAL <value> (262) 46 62
-    FLOAT_LITERAL <value> (263) 47 63
-    ADDOP <oper> (264) 48 50
-    MULOP <oper> (265) 51 55
-    ANDOP <oper> (266) 34
-    RELOP <oper> (267) 39
-    EXPOP <oper> (268) 53 54
+    IDENTIFIER <iden> (258) 2 3 8 18 19 35 70 71
+    INT_LITERAL <value> (259) 49 65
+    CHAR_LITERAL <value> (260) 50 66
+    REAL_LITERAL <value> (261) 51 67
+    HEX_LITERAL <value> (262) 52 68
+    FLOAT_LITERAL <value> (263) 53 69
+    ADDOP <oper> (264) 54 56
+    MULOP <oper> (265) 57 61
+    ANDOP <oper> (266) 40
+    RELOP <oper> (267) 45
+    EXPOP <oper> (268) 59 60
     REMOP <oper> (269)
-    NEGOP <oper> (270) 42
-    MODOP <oper> (271) 52 56
-    NOTOP <oper> (272) 36
-    OROP <oper> (273) 35
+    NEGOP <oper> (270) 48
+    MODOP <oper> (271) 58 62
+    NOTOP <oper> (272) 42
+    OROP <oper> (273) 41
     ARROW (274)
     BEGIN_ (275) 23
     CASE (276)
     CHARACTER (277) 11
-    ELSE (278) 31
+    ELSE (278) 37
     END (279) 23
     ENDSWITCH (280)
     FUNCTION (281) 2 3
@@ -162,14 +167,14 @@ Terminals, with rules where they appear
     SWITCH (288)
     WHEN (289) 26 28
     REAL (290) 10
-    IF (291) 30 31
-    THEN (292) 30 31 33
-    ELSIF (293) 33
-    ENDIF (294) 30 31
-    FOLD (295)
-    ENDFOLD (296)
-    LEFT (297)
-    RIGHT (298)
+    IF (291) 36 37
+    THEN (292) 36 37 39
+    ELSIF (293) 39
+    ENDIF (294) 36 37
+    FOLD (295) 31
+    ENDFOLD (296) 31
+    LEFT (297) 32
+    RIGHT (298) 33
 
 
 Nonterminals, with rules where they appear
@@ -205,7 +210,7 @@ Nonterminals, with rules where they appear
         on right: 15
     list <list> (59)
         on left: 20
-        on right: 19
+        on right: 19 34
     expressions <list> (60)
         on left: 21 22
         on right: 20 21
@@ -214,34 +219,43 @@ Nonterminals, with rules where they appear
         on right: 1
     statement_ <value> (62)
         on left: 24 25
-        on right: 23 30 31 33
+        on right: 23 36 37 39
     statement <value> (63)
-        on left: 26 27 28 29
+        on left: 26 27 28 29 30
         on right: 18 24
-    if_statement <value> (64)
-        on left: 30 31
-        on right: 29
-    elsif_clauses <value> (65)
+    fold_statement <value> (64)
+        on left: 31
+        on right: 30
+    direction <direction> (65)
         on left: 32 33
-        on right: 30 31 33
-    condition <value> (66)
-        on left: 34 35 36 37
-        on right: 26 28 30 31 33 34 35 36 38
-    relation <value> (67)
+        on right: 31
+    list_choice <list> (66)
+        on left: 34 35
+        on right: 31
+    if_statement <value> (67)
+        on left: 36 37
+        on right: 29
+    elsif_clauses <value> (68)
         on left: 38 39
-        on right: 34 35 37
-    expression <value> (68)
-        on left: 40 41 42 43 44 45 46 47 48 49
-        on right: 21 22 27 28 39 40 41 42 48 58 64
-    arithmetic_operator <oper> (69)
-        on left: 50 51 52 53
-        on right: 41
-    term <value> (70)
-        on left: 54 55 56 57
-        on right: 48 49 54 55 56
-    primary <value> (71)
-        on left: 58 59 60 61 62 63 64 65
-        on right: 54 55 56 57
+        on right: 36 37 39
+    condition <value> (69)
+        on left: 40 41 42 43
+        on right: 26 28 36 37 39 40 41 42 44
+    relation <value> (70)
+        on left: 44 45
+        on right: 40 41 43
+    expression <value> (71)
+        on left: 46 47 48 49 50 51 52 53 54 55
+        on right: 21 22 27 28 45 46 47 48 54 64 70
+    arithmetic_operator <oper> (72)
+        on left: 56 57 58 59
+        on right: 31 47
+    term <value> (73)
+        on left: 60 61 62 63
+        on right: 54 55 60 61 62
+    primary <value> (74)
+        on left: 64 65 66 67 68 69 70 71
+        on right: 60 61 62 63
 
 
 State 0
@@ -436,28 +450,30 @@ State 19
     NEGOP          shift, and go to state 40
     WHEN           shift, and go to state 41
     IF             shift, and go to state 42
-    '('            shift, and go to state 43
+    FOLD           shift, and go to state 43
+    '('            shift, and go to state 44
 
-    statement_    go to state 44
-    statement     go to state 45
-    if_statement  go to state 46
-    expression    go to state 47
-    term          go to state 48
-    primary       go to state 49
+    statement_      go to state 45
+    statement       go to state 46
+    fold_statement  go to state 47
+    if_statement    go to state 48
+    expression      go to state 49
+    term            go to state 50
+    primary         go to state 51
 
 
 State 20
 
     1 function: function_header optional_variable body • ';'
 
-    ';'  shift, and go to state 50
+    ';'  shift, and go to state 52
 
 
 State 21
 
    17 variables: error • ';'
 
-    ';'  shift, and go to state 51
+    ';'  shift, and go to state 53
 
 
 State 22
@@ -475,7 +491,7 @@ State 23
     INTEGER    shift, and go to state 25
     REAL       shift, and go to state 26
 
-    type  go to state 52
+    type  go to state 54
 
 
 State 24
@@ -503,7 +519,7 @@ State 27
 
     2 function_header: FUNCTION IDENTIFIER RETURNS type • ';'
 
-    ';'  shift, and go to state 53
+    ';'  shift, and go to state 55
 
 
 State 28
@@ -514,7 +530,7 @@ State 28
     INTEGER    shift, and go to state 25
     REAL       shift, and go to state 26
 
-    type  go to state 54
+    type  go to state 56
 
 
 State 29
@@ -523,7 +539,7 @@ State 29
 
     IDENTIFIER  shift, and go to state 13
 
-    parameter  go to state 55
+    parameter  go to state 57
 
 
 State 30
@@ -537,196 +553,196 @@ State 31
 
    19 variable: IDENTIFIER ':' LIST • OF type IS list ';'
 
-    OF  shift, and go to state 56
+    OF  shift, and go to state 58
 
 
 State 32
 
    18 variable: IDENTIFIER ':' type • IS statement ';'
 
-    IS  shift, and go to state 57
+    IS  shift, and go to state 59
 
 
 State 33
 
    25 statement_: error • ';'
 
-    ';'  shift, and go to state 58
+    ';'  shift, and go to state 60
 
 
 State 34
 
-   64 primary: IDENTIFIER • '(' expression ')'
-   65        | IDENTIFIER •
+   70 primary: IDENTIFIER • '(' expression ')'
+   71        | IDENTIFIER •
 
-    '('  shift, and go to state 59
+    '('  shift, and go to state 61
 
-    $default  reduce using rule 65 (primary)
+    $default  reduce using rule 71 (primary)
 
 
 State 35
 
-   43 expression: INT_LITERAL •
-   59 primary: INT_LITERAL •
+   49 expression: INT_LITERAL •
+   65 primary: INT_LITERAL •
 
-    ADDOP     reduce using rule 43 (expression)
-    ADDOP     [reduce using rule 59 (primary)]
-    MULOP     reduce using rule 43 (expression)
-    MULOP     [reduce using rule 59 (primary)]
-    ANDOP     reduce using rule 43 (expression)
-    ANDOP     [reduce using rule 59 (primary)]
-    RELOP     reduce using rule 43 (expression)
-    RELOP     [reduce using rule 59 (primary)]
-    EXPOP     reduce using rule 43 (expression)
-    EXPOP     [reduce using rule 59 (primary)]
-    MODOP     reduce using rule 43 (expression)
-    MODOP     [reduce using rule 59 (primary)]
-    OROP      reduce using rule 43 (expression)
-    OROP      [reduce using rule 59 (primary)]
-    THEN      reduce using rule 43 (expression)
-    THEN      [reduce using rule 59 (primary)]
-    ';'       reduce using rule 43 (expression)
-    ';'       [reduce using rule 59 (primary)]
-    ','       reduce using rule 43 (expression)
-    ','       [reduce using rule 59 (primary)]
-    ':'       reduce using rule 43 (expression)
-    ':'       [reduce using rule 59 (primary)]
-    ')'       reduce using rule 43 (expression)
-    ')'       [reduce using rule 59 (primary)]
-    $default  reduce using rule 43 (expression)
+    ADDOP     reduce using rule 49 (expression)
+    ADDOP     [reduce using rule 65 (primary)]
+    MULOP     reduce using rule 49 (expression)
+    MULOP     [reduce using rule 65 (primary)]
+    ANDOP     reduce using rule 49 (expression)
+    ANDOP     [reduce using rule 65 (primary)]
+    RELOP     reduce using rule 49 (expression)
+    RELOP     [reduce using rule 65 (primary)]
+    EXPOP     reduce using rule 49 (expression)
+    EXPOP     [reduce using rule 65 (primary)]
+    MODOP     reduce using rule 49 (expression)
+    MODOP     [reduce using rule 65 (primary)]
+    OROP      reduce using rule 49 (expression)
+    OROP      [reduce using rule 65 (primary)]
+    THEN      reduce using rule 49 (expression)
+    THEN      [reduce using rule 65 (primary)]
+    ';'       reduce using rule 49 (expression)
+    ';'       [reduce using rule 65 (primary)]
+    ','       reduce using rule 49 (expression)
+    ','       [reduce using rule 65 (primary)]
+    ':'       reduce using rule 49 (expression)
+    ':'       [reduce using rule 65 (primary)]
+    ')'       reduce using rule 49 (expression)
+    ')'       [reduce using rule 65 (primary)]
+    $default  reduce using rule 49 (expression)
 
 
 State 36
 
-   44 expression: CHAR_LITERAL •
-   60 primary: CHAR_LITERAL •
+   50 expression: CHAR_LITERAL •
+   66 primary: CHAR_LITERAL •
 
-    ADDOP     reduce using rule 44 (expression)
-    ADDOP     [reduce using rule 60 (primary)]
-    MULOP     reduce using rule 44 (expression)
-    MULOP     [reduce using rule 60 (primary)]
-    ANDOP     reduce using rule 44 (expression)
-    ANDOP     [reduce using rule 60 (primary)]
-    RELOP     reduce using rule 44 (expression)
-    RELOP     [reduce using rule 60 (primary)]
-    EXPOP     reduce using rule 44 (expression)
-    EXPOP     [reduce using rule 60 (primary)]
-    MODOP     reduce using rule 44 (expression)
-    MODOP     [reduce using rule 60 (primary)]
-    OROP      reduce using rule 44 (expression)
-    OROP      [reduce using rule 60 (primary)]
-    THEN      reduce using rule 44 (expression)
-    THEN      [reduce using rule 60 (primary)]
-    ';'       reduce using rule 44 (expression)
-    ';'       [reduce using rule 60 (primary)]
-    ','       reduce using rule 44 (expression)
-    ','       [reduce using rule 60 (primary)]
-    ':'       reduce using rule 44 (expression)
-    ':'       [reduce using rule 60 (primary)]
-    ')'       reduce using rule 44 (expression)
-    ')'       [reduce using rule 60 (primary)]
-    $default  reduce using rule 44 (expression)
+    ADDOP     reduce using rule 50 (expression)
+    ADDOP     [reduce using rule 66 (primary)]
+    MULOP     reduce using rule 50 (expression)
+    MULOP     [reduce using rule 66 (primary)]
+    ANDOP     reduce using rule 50 (expression)
+    ANDOP     [reduce using rule 66 (primary)]
+    RELOP     reduce using rule 50 (expression)
+    RELOP     [reduce using rule 66 (primary)]
+    EXPOP     reduce using rule 50 (expression)
+    EXPOP     [reduce using rule 66 (primary)]
+    MODOP     reduce using rule 50 (expression)
+    MODOP     [reduce using rule 66 (primary)]
+    OROP      reduce using rule 50 (expression)
+    OROP      [reduce using rule 66 (primary)]
+    THEN      reduce using rule 50 (expression)
+    THEN      [reduce using rule 66 (primary)]
+    ';'       reduce using rule 50 (expression)
+    ';'       [reduce using rule 66 (primary)]
+    ','       reduce using rule 50 (expression)
+    ','       [reduce using rule 66 (primary)]
+    ':'       reduce using rule 50 (expression)
+    ':'       [reduce using rule 66 (primary)]
+    ')'       reduce using rule 50 (expression)
+    ')'       [reduce using rule 66 (primary)]
+    $default  reduce using rule 50 (expression)
 
 
 State 37
 
-   45 expression: REAL_LITERAL •
-   61 primary: REAL_LITERAL •
+   51 expression: REAL_LITERAL •
+   67 primary: REAL_LITERAL •
 
-    ADDOP     reduce using rule 45 (expression)
-    ADDOP     [reduce using rule 61 (primary)]
-    MULOP     reduce using rule 45 (expression)
-    MULOP     [reduce using rule 61 (primary)]
-    ANDOP     reduce using rule 45 (expression)
-    ANDOP     [reduce using rule 61 (primary)]
-    RELOP     reduce using rule 45 (expression)
-    RELOP     [reduce using rule 61 (primary)]
-    EXPOP     reduce using rule 45 (expression)
-    EXPOP     [reduce using rule 61 (primary)]
-    MODOP     reduce using rule 45 (expression)
-    MODOP     [reduce using rule 61 (primary)]
-    OROP      reduce using rule 45 (expression)
-    OROP      [reduce using rule 61 (primary)]
-    THEN      reduce using rule 45 (expression)
-    THEN      [reduce using rule 61 (primary)]
-    ';'       reduce using rule 45 (expression)
-    ';'       [reduce using rule 61 (primary)]
-    ','       reduce using rule 45 (expression)
-    ','       [reduce using rule 61 (primary)]
-    ':'       reduce using rule 45 (expression)
-    ':'       [reduce using rule 61 (primary)]
-    ')'       reduce using rule 45 (expression)
-    ')'       [reduce using rule 61 (primary)]
-    $default  reduce using rule 45 (expression)
+    ADDOP     reduce using rule 51 (expression)
+    ADDOP     [reduce using rule 67 (primary)]
+    MULOP     reduce using rule 51 (expression)
+    MULOP     [reduce using rule 67 (primary)]
+    ANDOP     reduce using rule 51 (expression)
+    ANDOP     [reduce using rule 67 (primary)]
+    RELOP     reduce using rule 51 (expression)
+    RELOP     [reduce using rule 67 (primary)]
+    EXPOP     reduce using rule 51 (expression)
+    EXPOP     [reduce using rule 67 (primary)]
+    MODOP     reduce using rule 51 (expression)
+    MODOP     [reduce using rule 67 (primary)]
+    OROP      reduce using rule 51 (expression)
+    OROP      [reduce using rule 67 (primary)]
+    THEN      reduce using rule 51 (expression)
+    THEN      [reduce using rule 67 (primary)]
+    ';'       reduce using rule 51 (expression)
+    ';'       [reduce using rule 67 (primary)]
+    ','       reduce using rule 51 (expression)
+    ','       [reduce using rule 67 (primary)]
+    ':'       reduce using rule 51 (expression)
+    ':'       [reduce using rule 67 (primary)]
+    ')'       reduce using rule 51 (expression)
+    ')'       [reduce using rule 67 (primary)]
+    $default  reduce using rule 51 (expression)
 
 
 State 38
 
-   46 expression: HEX_LITERAL •
-   62 primary: HEX_LITERAL •
+   52 expression: HEX_LITERAL •
+   68 primary: HEX_LITERAL •
 
-    ADDOP     reduce using rule 46 (expression)
-    ADDOP     [reduce using rule 62 (primary)]
-    MULOP     reduce using rule 46 (expression)
-    MULOP     [reduce using rule 62 (primary)]
-    ANDOP     reduce using rule 46 (expression)
-    ANDOP     [reduce using rule 62 (primary)]
-    RELOP     reduce using rule 46 (expression)
-    RELOP     [reduce using rule 62 (primary)]
-    EXPOP     reduce using rule 46 (expression)
-    EXPOP     [reduce using rule 62 (primary)]
-    MODOP     reduce using rule 46 (expression)
-    MODOP     [reduce using rule 62 (primary)]
-    OROP      reduce using rule 46 (expression)
-    OROP      [reduce using rule 62 (primary)]
-    THEN      reduce using rule 46 (expression)
-    THEN      [reduce using rule 62 (primary)]
-    ';'       reduce using rule 46 (expression)
-    ';'       [reduce using rule 62 (primary)]
-    ','       reduce using rule 46 (expression)
-    ','       [reduce using rule 62 (primary)]
-    ':'       reduce using rule 46 (expression)
-    ':'       [reduce using rule 62 (primary)]
-    ')'       reduce using rule 46 (expression)
-    ')'       [reduce using rule 62 (primary)]
-    $default  reduce using rule 46 (expression)
+    ADDOP     reduce using rule 52 (expression)
+    ADDOP     [reduce using rule 68 (primary)]
+    MULOP     reduce using rule 52 (expression)
+    MULOP     [reduce using rule 68 (primary)]
+    ANDOP     reduce using rule 52 (expression)
+    ANDOP     [reduce using rule 68 (primary)]
+    RELOP     reduce using rule 52 (expression)
+    RELOP     [reduce using rule 68 (primary)]
+    EXPOP     reduce using rule 52 (expression)
+    EXPOP     [reduce using rule 68 (primary)]
+    MODOP     reduce using rule 52 (expression)
+    MODOP     [reduce using rule 68 (primary)]
+    OROP      reduce using rule 52 (expression)
+    OROP      [reduce using rule 68 (primary)]
+    THEN      reduce using rule 52 (expression)
+    THEN      [reduce using rule 68 (primary)]
+    ';'       reduce using rule 52 (expression)
+    ';'       [reduce using rule 68 (primary)]
+    ','       reduce using rule 52 (expression)
+    ','       [reduce using rule 68 (primary)]
+    ':'       reduce using rule 52 (expression)
+    ':'       [reduce using rule 68 (primary)]
+    ')'       reduce using rule 52 (expression)
+    ')'       [reduce using rule 68 (primary)]
+    $default  reduce using rule 52 (expression)
 
 
 State 39
 
-   47 expression: FLOAT_LITERAL •
-   63 primary: FLOAT_LITERAL •
+   53 expression: FLOAT_LITERAL •
+   69 primary: FLOAT_LITERAL •
 
-    ADDOP     reduce using rule 47 (expression)
-    ADDOP     [reduce using rule 63 (primary)]
-    MULOP     reduce using rule 47 (expression)
-    MULOP     [reduce using rule 63 (primary)]
-    ANDOP     reduce using rule 47 (expression)
-    ANDOP     [reduce using rule 63 (primary)]
-    RELOP     reduce using rule 47 (expression)
-    RELOP     [reduce using rule 63 (primary)]
-    EXPOP     reduce using rule 47 (expression)
-    EXPOP     [reduce using rule 63 (primary)]
-    MODOP     reduce using rule 47 (expression)
-    MODOP     [reduce using rule 63 (primary)]
-    OROP      reduce using rule 47 (expression)
-    OROP      [reduce using rule 63 (primary)]
-    THEN      reduce using rule 47 (expression)
-    THEN      [reduce using rule 63 (primary)]
-    ';'       reduce using rule 47 (expression)
-    ';'       [reduce using rule 63 (primary)]
-    ','       reduce using rule 47 (expression)
-    ','       [reduce using rule 63 (primary)]
-    ':'       reduce using rule 47 (expression)
-    ':'       [reduce using rule 63 (primary)]
-    ')'       reduce using rule 47 (expression)
-    ')'       [reduce using rule 63 (primary)]
-    $default  reduce using rule 47 (expression)
+    ADDOP     reduce using rule 53 (expression)
+    ADDOP     [reduce using rule 69 (primary)]
+    MULOP     reduce using rule 53 (expression)
+    MULOP     [reduce using rule 69 (primary)]
+    ANDOP     reduce using rule 53 (expression)
+    ANDOP     [reduce using rule 69 (primary)]
+    RELOP     reduce using rule 53 (expression)
+    RELOP     [reduce using rule 69 (primary)]
+    EXPOP     reduce using rule 53 (expression)
+    EXPOP     [reduce using rule 69 (primary)]
+    MODOP     reduce using rule 53 (expression)
+    MODOP     [reduce using rule 69 (primary)]
+    OROP      reduce using rule 53 (expression)
+    OROP      [reduce using rule 69 (primary)]
+    THEN      reduce using rule 53 (expression)
+    THEN      [reduce using rule 69 (primary)]
+    ';'       reduce using rule 53 (expression)
+    ';'       [reduce using rule 69 (primary)]
+    ','       reduce using rule 53 (expression)
+    ','       [reduce using rule 69 (primary)]
+    ':'       reduce using rule 53 (expression)
+    ':'       [reduce using rule 69 (primary)]
+    ')'       reduce using rule 53 (expression)
+    ')'       [reduce using rule 69 (primary)]
+    $default  reduce using rule 53 (expression)
 
 
 State 40
 
-   42 expression: NEGOP • expression
+   48 expression: NEGOP • expression
 
     IDENTIFIER     shift, and go to state 34
     INT_LITERAL    shift, and go to state 35
@@ -735,11 +751,11 @@ State 40
     HEX_LITERAL    shift, and go to state 38
     FLOAT_LITERAL  shift, and go to state 39
     NEGOP          shift, and go to state 40
-    '('            shift, and go to state 43
+    '('            shift, and go to state 44
 
-    expression  go to state 60
-    term        go to state 48
-    primary     go to state 49
+    expression  go to state 62
+    term        go to state 50
+    primary     go to state 51
 
 
 State 41
@@ -754,20 +770,20 @@ State 41
     HEX_LITERAL    shift, and go to state 38
     FLOAT_LITERAL  shift, and go to state 39
     NEGOP          shift, and go to state 40
-    NOTOP          shift, and go to state 61
-    '('            shift, and go to state 62
+    NOTOP          shift, and go to state 63
+    '('            shift, and go to state 64
 
-    condition   go to state 63
-    relation    go to state 64
-    expression  go to state 65
-    term        go to state 48
-    primary     go to state 49
+    condition   go to state 65
+    relation    go to state 66
+    expression  go to state 67
+    term        go to state 50
+    primary     go to state 51
 
 
 State 42
 
-   30 if_statement: IF • condition THEN statement_ elsif_clauses ENDIF
-   31             | IF • condition THEN statement_ elsif_clauses ELSE statement_ ENDIF
+   36 if_statement: IF • condition THEN statement_ elsif_clauses ENDIF
+   37             | IF • condition THEN statement_ elsif_clauses ELSE statement_ ENDIF
 
     IDENTIFIER     shift, and go to state 34
     INT_LITERAL    shift, and go to state 35
@@ -776,20 +792,30 @@ State 42
     HEX_LITERAL    shift, and go to state 38
     FLOAT_LITERAL  shift, and go to state 39
     NEGOP          shift, and go to state 40
-    NOTOP          shift, and go to state 61
-    '('            shift, and go to state 62
+    NOTOP          shift, and go to state 63
+    '('            shift, and go to state 64
 
-    condition   go to state 66
-    relation    go to state 64
-    expression  go to state 65
-    term        go to state 48
-    primary     go to state 49
+    condition   go to state 68
+    relation    go to state 66
+    expression  go to state 67
+    term        go to state 50
+    primary     go to state 51
 
 
 State 43
 
-   40 expression: '(' • expression ')'
-   58 primary: '(' • expression ')'
+   31 fold_statement: FOLD • direction arithmetic_operator list_choice ENDFOLD
+
+    LEFT   shift, and go to state 69
+    RIGHT  shift, and go to state 70
+
+    direction  go to state 71
+
+
+State 44
+
+   46 expression: '(' • expression ')'
+   64 primary: '(' • expression ')'
 
     IDENTIFIER     shift, and go to state 34
     INT_LITERAL    shift, and go to state 35
@@ -798,110 +824,117 @@ State 43
     HEX_LITERAL    shift, and go to state 38
     FLOAT_LITERAL  shift, and go to state 39
     NEGOP          shift, and go to state 40
-    '('            shift, and go to state 43
+    '('            shift, and go to state 44
 
-    expression  go to state 67
-    term        go to state 48
-    primary     go to state 49
-
-
-State 44
-
-   23 body: BEGIN_ statement_ • END
-
-    END  shift, and go to state 68
+    expression  go to state 72
+    term        go to state 50
+    primary     go to state 51
 
 
 State 45
 
-   24 statement_: statement • ';'
+   23 body: BEGIN_ statement_ • END
 
-    ';'  shift, and go to state 69
+    END  shift, and go to state 73
 
 
 State 46
+
+   24 statement_: statement • ';'
+
+    ';'  shift, and go to state 74
+
+
+State 47
+
+   30 statement: fold_statement •
+
+    $default  reduce using rule 30 (statement)
+
+
+State 48
 
    29 statement: if_statement •
 
     $default  reduce using rule 29 (statement)
 
 
-State 47
+State 49
 
    27 statement: expression •
-   41 expression: expression • arithmetic_operator expression
-   48           | expression • ADDOP term
+   47 expression: expression • arithmetic_operator expression
+   54           | expression • ADDOP term
 
-    ADDOP  shift, and go to state 70
-    MULOP  shift, and go to state 71
-    EXPOP  shift, and go to state 72
-    MODOP  shift, and go to state 73
+    ADDOP  shift, and go to state 75
+    MULOP  shift, and go to state 76
+    EXPOP  shift, and go to state 77
+    MODOP  shift, and go to state 78
 
     $default  reduce using rule 27 (statement)
 
-    arithmetic_operator  go to state 74
-
-
-State 48
-
-   49 expression: term •
-   54 term: term • EXPOP primary
-   55     | term • MULOP primary
-   56     | term • MODOP primary
-
-    MULOP  shift, and go to state 75
-    EXPOP  shift, and go to state 76
-    MODOP  shift, and go to state 77
-
-    MULOP     [reduce using rule 49 (expression)]
-    EXPOP     [reduce using rule 49 (expression)]
-    MODOP     [reduce using rule 49 (expression)]
-    $default  reduce using rule 49 (expression)
-
-
-State 49
-
-   57 term: primary •
-
-    $default  reduce using rule 57 (term)
+    arithmetic_operator  go to state 79
 
 
 State 50
+
+   55 expression: term •
+   60 term: term • EXPOP primary
+   61     | term • MULOP primary
+   62     | term • MODOP primary
+
+    MULOP  shift, and go to state 80
+    EXPOP  shift, and go to state 81
+    MODOP  shift, and go to state 82
+
+    MULOP     [reduce using rule 55 (expression)]
+    EXPOP     [reduce using rule 55 (expression)]
+    MODOP     [reduce using rule 55 (expression)]
+    $default  reduce using rule 55 (expression)
+
+
+State 51
+
+   63 term: primary •
+
+    $default  reduce using rule 63 (term)
+
+
+State 52
 
     1 function: function_header optional_variable body ';' •
 
     $default  reduce using rule 1 (function)
 
 
-State 51
+State 53
 
    17 variables: error ';' •
 
     $default  reduce using rule 17 (variables)
 
 
-State 52
+State 54
 
     8 parameter: IDENTIFIER ':' type •
 
     $default  reduce using rule 8 (parameter)
 
 
-State 53
+State 55
 
     2 function_header: FUNCTION IDENTIFIER RETURNS type ';' •
 
     $default  reduce using rule 2 (function_header)
 
 
-State 54
+State 56
 
     3 function_header: FUNCTION IDENTIFIER parameters RETURNS type • ';'
 
-    ';'  shift, and go to state 78
+    ';'  shift, and go to state 83
 
 
-State 55
+State 57
 
     6 more_parameters: ',' parameter • more_parameters
 
@@ -909,10 +942,10 @@ State 55
 
     $default  reduce using rule 7 (more_parameters)
 
-    more_parameters  go to state 79
+    more_parameters  go to state 84
 
 
-State 56
+State 58
 
    19 variable: IDENTIFIER ':' LIST OF • type IS list ';'
 
@@ -920,10 +953,10 @@ State 56
     INTEGER    shift, and go to state 25
     REAL       shift, and go to state 26
 
-    type  go to state 80
+    type  go to state 85
 
 
-State 57
+State 59
 
    18 variable: IDENTIFIER ':' type IS • statement ';'
 
@@ -936,63 +969,27 @@ State 57
     NEGOP          shift, and go to state 40
     WHEN           shift, and go to state 41
     IF             shift, and go to state 42
-    '('            shift, and go to state 43
+    FOLD           shift, and go to state 43
+    '('            shift, and go to state 44
 
-    statement     go to state 81
-    if_statement  go to state 46
-    expression    go to state 47
-    term          go to state 48
-    primary       go to state 49
+    statement       go to state 86
+    fold_statement  go to state 47
+    if_statement    go to state 48
+    expression      go to state 49
+    term            go to state 50
+    primary         go to state 51
 
 
-State 58
+State 60
 
    25 statement_: error ';' •
 
     $default  reduce using rule 25 (statement_)
 
 
-State 59
-
-   64 primary: IDENTIFIER '(' • expression ')'
-
-    IDENTIFIER     shift, and go to state 34
-    INT_LITERAL    shift, and go to state 35
-    CHAR_LITERAL   shift, and go to state 36
-    REAL_LITERAL   shift, and go to state 37
-    HEX_LITERAL    shift, and go to state 38
-    FLOAT_LITERAL  shift, and go to state 39
-    NEGOP          shift, and go to state 40
-    '('            shift, and go to state 43
-
-    expression  go to state 82
-    term        go to state 48
-    primary     go to state 49
-
-
-State 60
-
-   41 expression: expression • arithmetic_operator expression
-   42           | NEGOP expression •
-   48           | expression • ADDOP term
-
-    ADDOP  shift, and go to state 70
-    MULOP  shift, and go to state 71
-    EXPOP  shift, and go to state 72
-    MODOP  shift, and go to state 73
-
-    ADDOP     [reduce using rule 42 (expression)]
-    MULOP     [reduce using rule 42 (expression)]
-    EXPOP     [reduce using rule 42 (expression)]
-    MODOP     [reduce using rule 42 (expression)]
-    $default  reduce using rule 42 (expression)
-
-    arithmetic_operator  go to state 74
-
-
 State 61
 
-   36 condition: NOTOP • condition
+   70 primary: IDENTIFIER '(' • expression ')'
 
     IDENTIFIER     shift, and go to state 34
     INT_LITERAL    shift, and go to state 35
@@ -1001,21 +998,36 @@ State 61
     HEX_LITERAL    shift, and go to state 38
     FLOAT_LITERAL  shift, and go to state 39
     NEGOP          shift, and go to state 40
-    NOTOP          shift, and go to state 61
-    '('            shift, and go to state 62
+    '('            shift, and go to state 44
 
-    condition   go to state 83
-    relation    go to state 64
-    expression  go to state 65
-    term        go to state 48
-    primary     go to state 49
+    expression  go to state 87
+    term        go to state 50
+    primary     go to state 51
 
 
 State 62
 
-   38 relation: '(' • condition ')'
-   40 expression: '(' • expression ')'
-   58 primary: '(' • expression ')'
+   47 expression: expression • arithmetic_operator expression
+   48           | NEGOP expression •
+   54           | expression • ADDOP term
+
+    ADDOP  shift, and go to state 75
+    MULOP  shift, and go to state 76
+    EXPOP  shift, and go to state 77
+    MODOP  shift, and go to state 78
+
+    ADDOP     [reduce using rule 48 (expression)]
+    MULOP     [reduce using rule 48 (expression)]
+    EXPOP     [reduce using rule 48 (expression)]
+    MODOP     [reduce using rule 48 (expression)]
+    $default  reduce using rule 48 (expression)
+
+    arithmetic_operator  go to state 79
+
+
+State 63
+
+   42 condition: NOTOP • condition
 
     IDENTIFIER     shift, and go to state 34
     INT_LITERAL    shift, and go to state 35
@@ -1024,144 +1036,193 @@ State 62
     HEX_LITERAL    shift, and go to state 38
     FLOAT_LITERAL  shift, and go to state 39
     NEGOP          shift, and go to state 40
-    NOTOP          shift, and go to state 61
-    '('            shift, and go to state 62
+    NOTOP          shift, and go to state 63
+    '('            shift, and go to state 64
 
-    condition   go to state 84
-    relation    go to state 64
-    expression  go to state 85
-    term        go to state 48
-    primary     go to state 49
-
-
-State 63
-
-   26 statement: WHEN condition •
-   28          | WHEN condition • ',' expression ':' expression
-   34 condition: condition • ANDOP relation
-   35          | condition • OROP relation
-
-    ANDOP  shift, and go to state 86
-    OROP   shift, and go to state 87
-    ','    shift, and go to state 88
-
-    $default  reduce using rule 26 (statement)
+    condition   go to state 88
+    relation    go to state 66
+    expression  go to state 67
+    term        go to state 50
+    primary     go to state 51
 
 
 State 64
 
-   37 condition: relation •
+   44 relation: '(' • condition ')'
+   46 expression: '(' • expression ')'
+   64 primary: '(' • expression ')'
 
-    $default  reduce using rule 37 (condition)
+    IDENTIFIER     shift, and go to state 34
+    INT_LITERAL    shift, and go to state 35
+    CHAR_LITERAL   shift, and go to state 36
+    REAL_LITERAL   shift, and go to state 37
+    HEX_LITERAL    shift, and go to state 38
+    FLOAT_LITERAL  shift, and go to state 39
+    NEGOP          shift, and go to state 40
+    NOTOP          shift, and go to state 63
+    '('            shift, and go to state 64
+
+    condition   go to state 89
+    relation    go to state 66
+    expression  go to state 90
+    term        go to state 50
+    primary     go to state 51
 
 
 State 65
 
-   39 relation: expression • RELOP expression
-   41 expression: expression • arithmetic_operator expression
-   48           | expression • ADDOP term
+   26 statement: WHEN condition •
+   28          | WHEN condition • ',' expression ':' expression
+   40 condition: condition • ANDOP relation
+   41          | condition • OROP relation
 
-    ADDOP  shift, and go to state 70
-    MULOP  shift, and go to state 71
-    RELOP  shift, and go to state 89
-    EXPOP  shift, and go to state 72
-    MODOP  shift, and go to state 73
+    ANDOP  shift, and go to state 91
+    OROP   shift, and go to state 92
+    ','    shift, and go to state 93
 
-    arithmetic_operator  go to state 74
+    $default  reduce using rule 26 (statement)
 
 
 State 66
 
-   30 if_statement: IF condition • THEN statement_ elsif_clauses ENDIF
-   31             | IF condition • THEN statement_ elsif_clauses ELSE statement_ ENDIF
-   34 condition: condition • ANDOP relation
-   35          | condition • OROP relation
+   43 condition: relation •
 
-    ANDOP  shift, and go to state 86
-    OROP   shift, and go to state 87
-    THEN   shift, and go to state 90
+    $default  reduce using rule 43 (condition)
 
 
 State 67
 
-   40 expression: '(' expression • ')'
-   41           | expression • arithmetic_operator expression
-   48           | expression • ADDOP term
-   58 primary: '(' expression • ')'
+   45 relation: expression • RELOP expression
+   47 expression: expression • arithmetic_operator expression
+   54           | expression • ADDOP term
 
-    ADDOP  shift, and go to state 70
-    MULOP  shift, and go to state 71
-    EXPOP  shift, and go to state 72
-    MODOP  shift, and go to state 73
-    ')'    shift, and go to state 91
+    ADDOP  shift, and go to state 75
+    MULOP  shift, and go to state 76
+    RELOP  shift, and go to state 94
+    EXPOP  shift, and go to state 77
+    MODOP  shift, and go to state 78
 
-    arithmetic_operator  go to state 74
+    arithmetic_operator  go to state 79
 
 
 State 68
+
+   36 if_statement: IF condition • THEN statement_ elsif_clauses ENDIF
+   37             | IF condition • THEN statement_ elsif_clauses ELSE statement_ ENDIF
+   40 condition: condition • ANDOP relation
+   41          | condition • OROP relation
+
+    ANDOP  shift, and go to state 91
+    OROP   shift, and go to state 92
+    THEN   shift, and go to state 95
+
+
+State 69
+
+   32 direction: LEFT •
+
+    $default  reduce using rule 32 (direction)
+
+
+State 70
+
+   33 direction: RIGHT •
+
+    $default  reduce using rule 33 (direction)
+
+
+State 71
+
+   31 fold_statement: FOLD direction • arithmetic_operator list_choice ENDFOLD
+
+    ADDOP  shift, and go to state 96
+    MULOP  shift, and go to state 76
+    EXPOP  shift, and go to state 77
+    MODOP  shift, and go to state 78
+
+    arithmetic_operator  go to state 97
+
+
+State 72
+
+   46 expression: '(' expression • ')'
+   47           | expression • arithmetic_operator expression
+   54           | expression • ADDOP term
+   64 primary: '(' expression • ')'
+
+    ADDOP  shift, and go to state 75
+    MULOP  shift, and go to state 76
+    EXPOP  shift, and go to state 77
+    MODOP  shift, and go to state 78
+    ')'    shift, and go to state 98
+
+    arithmetic_operator  go to state 79
+
+
+State 73
 
    23 body: BEGIN_ statement_ END •
 
     $default  reduce using rule 23 (body)
 
 
-State 69
+State 74
 
    24 statement_: statement ';' •
 
     $default  reduce using rule 24 (statement_)
 
 
-State 70
+State 75
 
-   48 expression: expression ADDOP • term
-   50 arithmetic_operator: ADDOP •
+   54 expression: expression ADDOP • term
+   56 arithmetic_operator: ADDOP •
 
     IDENTIFIER     shift, and go to state 34
-    INT_LITERAL    shift, and go to state 92
-    CHAR_LITERAL   shift, and go to state 93
-    REAL_LITERAL   shift, and go to state 94
-    HEX_LITERAL    shift, and go to state 95
-    FLOAT_LITERAL  shift, and go to state 96
-    '('            shift, and go to state 97
+    INT_LITERAL    shift, and go to state 99
+    CHAR_LITERAL   shift, and go to state 100
+    REAL_LITERAL   shift, and go to state 101
+    HEX_LITERAL    shift, and go to state 102
+    FLOAT_LITERAL  shift, and go to state 103
+    '('            shift, and go to state 104
 
-    IDENTIFIER     [reduce using rule 50 (arithmetic_operator)]
-    INT_LITERAL    [reduce using rule 50 (arithmetic_operator)]
-    CHAR_LITERAL   [reduce using rule 50 (arithmetic_operator)]
-    REAL_LITERAL   [reduce using rule 50 (arithmetic_operator)]
-    HEX_LITERAL    [reduce using rule 50 (arithmetic_operator)]
-    FLOAT_LITERAL  [reduce using rule 50 (arithmetic_operator)]
-    '('            [reduce using rule 50 (arithmetic_operator)]
-    $default       reduce using rule 50 (arithmetic_operator)
+    IDENTIFIER     [reduce using rule 56 (arithmetic_operator)]
+    INT_LITERAL    [reduce using rule 56 (arithmetic_operator)]
+    CHAR_LITERAL   [reduce using rule 56 (arithmetic_operator)]
+    REAL_LITERAL   [reduce using rule 56 (arithmetic_operator)]
+    HEX_LITERAL    [reduce using rule 56 (arithmetic_operator)]
+    FLOAT_LITERAL  [reduce using rule 56 (arithmetic_operator)]
+    '('            [reduce using rule 56 (arithmetic_operator)]
+    $default       reduce using rule 56 (arithmetic_operator)
 
-    term     go to state 98
-    primary  go to state 49
-
-
-State 71
-
-   51 arithmetic_operator: MULOP •
-
-    $default  reduce using rule 51 (arithmetic_operator)
+    term     go to state 105
+    primary  go to state 51
 
 
-State 72
+State 76
 
-   53 arithmetic_operator: EXPOP •
+   57 arithmetic_operator: MULOP •
 
-    $default  reduce using rule 53 (arithmetic_operator)
-
-
-State 73
-
-   52 arithmetic_operator: MODOP •
-
-    $default  reduce using rule 52 (arithmetic_operator)
+    $default  reduce using rule 57 (arithmetic_operator)
 
 
-State 74
+State 77
 
-   41 expression: expression arithmetic_operator • expression
+   59 arithmetic_operator: EXPOP •
+
+    $default  reduce using rule 59 (arithmetic_operator)
+
+
+State 78
+
+   58 arithmetic_operator: MODOP •
+
+    $default  reduce using rule 58 (arithmetic_operator)
+
+
+State 79
+
+   47 expression: expression arithmetic_operator • expression
 
     IDENTIFIER     shift, and go to state 34
     INT_LITERAL    shift, and go to state 35
@@ -1170,166 +1231,147 @@ State 74
     HEX_LITERAL    shift, and go to state 38
     FLOAT_LITERAL  shift, and go to state 39
     NEGOP          shift, and go to state 40
-    '('            shift, and go to state 43
+    '('            shift, and go to state 44
 
-    expression  go to state 99
-    term        go to state 48
-    primary     go to state 49
-
-
-State 75
-
-   55 term: term MULOP • primary
-
-    IDENTIFIER     shift, and go to state 34
-    INT_LITERAL    shift, and go to state 92
-    CHAR_LITERAL   shift, and go to state 93
-    REAL_LITERAL   shift, and go to state 94
-    HEX_LITERAL    shift, and go to state 95
-    FLOAT_LITERAL  shift, and go to state 96
-    '('            shift, and go to state 97
-
-    primary  go to state 100
+    expression  go to state 106
+    term        go to state 50
+    primary     go to state 51
 
 
-State 76
+State 80
 
-   54 term: term EXPOP • primary
+   61 term: term MULOP • primary
 
     IDENTIFIER     shift, and go to state 34
-    INT_LITERAL    shift, and go to state 92
-    CHAR_LITERAL   shift, and go to state 93
-    REAL_LITERAL   shift, and go to state 94
-    HEX_LITERAL    shift, and go to state 95
-    FLOAT_LITERAL  shift, and go to state 96
-    '('            shift, and go to state 97
+    INT_LITERAL    shift, and go to state 99
+    CHAR_LITERAL   shift, and go to state 100
+    REAL_LITERAL   shift, and go to state 101
+    HEX_LITERAL    shift, and go to state 102
+    FLOAT_LITERAL  shift, and go to state 103
+    '('            shift, and go to state 104
 
-    primary  go to state 101
+    primary  go to state 107
 
 
-State 77
+State 81
 
-   56 term: term MODOP • primary
+   60 term: term EXPOP • primary
 
     IDENTIFIER     shift, and go to state 34
-    INT_LITERAL    shift, and go to state 92
-    CHAR_LITERAL   shift, and go to state 93
-    REAL_LITERAL   shift, and go to state 94
-    HEX_LITERAL    shift, and go to state 95
-    FLOAT_LITERAL  shift, and go to state 96
-    '('            shift, and go to state 97
+    INT_LITERAL    shift, and go to state 99
+    CHAR_LITERAL   shift, and go to state 100
+    REAL_LITERAL   shift, and go to state 101
+    HEX_LITERAL    shift, and go to state 102
+    FLOAT_LITERAL  shift, and go to state 103
+    '('            shift, and go to state 104
 
-    primary  go to state 102
+    primary  go to state 108
 
 
-State 78
+State 82
+
+   62 term: term MODOP • primary
+
+    IDENTIFIER     shift, and go to state 34
+    INT_LITERAL    shift, and go to state 99
+    CHAR_LITERAL   shift, and go to state 100
+    REAL_LITERAL   shift, and go to state 101
+    HEX_LITERAL    shift, and go to state 102
+    FLOAT_LITERAL  shift, and go to state 103
+    '('            shift, and go to state 104
+
+    primary  go to state 109
+
+
+State 83
 
     3 function_header: FUNCTION IDENTIFIER parameters RETURNS type ';' •
 
     $default  reduce using rule 3 (function_header)
 
 
-State 79
+State 84
 
     6 more_parameters: ',' parameter more_parameters •
 
     $default  reduce using rule 6 (more_parameters)
 
 
-State 80
+State 85
 
    19 variable: IDENTIFIER ':' LIST OF type • IS list ';'
 
-    IS  shift, and go to state 103
-
-
-State 81
-
-   18 variable: IDENTIFIER ':' type IS statement • ';'
-
-    ';'  shift, and go to state 104
-
-
-State 82
-
-   41 expression: expression • arithmetic_operator expression
-   48           | expression • ADDOP term
-   64 primary: IDENTIFIER '(' expression • ')'
-
-    ADDOP  shift, and go to state 70
-    MULOP  shift, and go to state 71
-    EXPOP  shift, and go to state 72
-    MODOP  shift, and go to state 73
-    ')'    shift, and go to state 105
-
-    arithmetic_operator  go to state 74
-
-
-State 83
-
-   34 condition: condition • ANDOP relation
-   35          | condition • OROP relation
-   36          | NOTOP condition •
-
-    ANDOP  shift, and go to state 86
-    OROP   shift, and go to state 87
-
-    ANDOP     [reduce using rule 36 (condition)]
-    OROP      [reduce using rule 36 (condition)]
-    $default  reduce using rule 36 (condition)
-
-
-State 84
-
-   34 condition: condition • ANDOP relation
-   35          | condition • OROP relation
-   38 relation: '(' condition • ')'
-
-    ANDOP  shift, and go to state 86
-    OROP   shift, and go to state 87
-    ')'    shift, and go to state 106
-
-
-State 85
-
-   39 relation: expression • RELOP expression
-   40 expression: '(' expression • ')'
-   41           | expression • arithmetic_operator expression
-   48           | expression • ADDOP term
-   58 primary: '(' expression • ')'
-
-    ADDOP  shift, and go to state 70
-    MULOP  shift, and go to state 71
-    RELOP  shift, and go to state 89
-    EXPOP  shift, and go to state 72
-    MODOP  shift, and go to state 73
-    ')'    shift, and go to state 91
-
-    arithmetic_operator  go to state 74
+    IS  shift, and go to state 110
 
 
 State 86
 
-   34 condition: condition ANDOP • relation
+   18 variable: IDENTIFIER ':' type IS statement • ';'
 
-    IDENTIFIER     shift, and go to state 34
-    INT_LITERAL    shift, and go to state 35
-    CHAR_LITERAL   shift, and go to state 36
-    REAL_LITERAL   shift, and go to state 37
-    HEX_LITERAL    shift, and go to state 38
-    FLOAT_LITERAL  shift, and go to state 39
-    NEGOP          shift, and go to state 40
-    '('            shift, and go to state 62
-
-    relation    go to state 107
-    expression  go to state 65
-    term        go to state 48
-    primary     go to state 49
+    ';'  shift, and go to state 111
 
 
 State 87
 
-   35 condition: condition OROP • relation
+   47 expression: expression • arithmetic_operator expression
+   54           | expression • ADDOP term
+   70 primary: IDENTIFIER '(' expression • ')'
+
+    ADDOP  shift, and go to state 75
+    MULOP  shift, and go to state 76
+    EXPOP  shift, and go to state 77
+    MODOP  shift, and go to state 78
+    ')'    shift, and go to state 112
+
+    arithmetic_operator  go to state 79
+
+
+State 88
+
+   40 condition: condition • ANDOP relation
+   41          | condition • OROP relation
+   42          | NOTOP condition •
+
+    ANDOP  shift, and go to state 91
+    OROP   shift, and go to state 92
+
+    ANDOP     [reduce using rule 42 (condition)]
+    OROP      [reduce using rule 42 (condition)]
+    $default  reduce using rule 42 (condition)
+
+
+State 89
+
+   40 condition: condition • ANDOP relation
+   41          | condition • OROP relation
+   44 relation: '(' condition • ')'
+
+    ANDOP  shift, and go to state 91
+    OROP   shift, and go to state 92
+    ')'    shift, and go to state 113
+
+
+State 90
+
+   45 relation: expression • RELOP expression
+   46 expression: '(' expression • ')'
+   47           | expression • arithmetic_operator expression
+   54           | expression • ADDOP term
+   64 primary: '(' expression • ')'
+
+    ADDOP  shift, and go to state 75
+    MULOP  shift, and go to state 76
+    RELOP  shift, and go to state 94
+    EXPOP  shift, and go to state 77
+    MODOP  shift, and go to state 78
+    ')'    shift, and go to state 98
+
+    arithmetic_operator  go to state 79
+
+
+State 91
+
+   40 condition: condition ANDOP • relation
 
     IDENTIFIER     shift, and go to state 34
     INT_LITERAL    shift, and go to state 35
@@ -1338,15 +1380,34 @@ State 87
     HEX_LITERAL    shift, and go to state 38
     FLOAT_LITERAL  shift, and go to state 39
     NEGOP          shift, and go to state 40
-    '('            shift, and go to state 62
+    '('            shift, and go to state 64
 
-    relation    go to state 108
-    expression  go to state 65
-    term        go to state 48
-    primary     go to state 49
+    relation    go to state 114
+    expression  go to state 67
+    term        go to state 50
+    primary     go to state 51
 
 
-State 88
+State 92
+
+   41 condition: condition OROP • relation
+
+    IDENTIFIER     shift, and go to state 34
+    INT_LITERAL    shift, and go to state 35
+    CHAR_LITERAL   shift, and go to state 36
+    REAL_LITERAL   shift, and go to state 37
+    HEX_LITERAL    shift, and go to state 38
+    FLOAT_LITERAL  shift, and go to state 39
+    NEGOP          shift, and go to state 40
+    '('            shift, and go to state 64
+
+    relation    go to state 115
+    expression  go to state 67
+    term        go to state 50
+    primary     go to state 51
+
+
+State 93
 
    28 statement: WHEN condition ',' • expression ':' expression
 
@@ -1357,16 +1418,16 @@ State 88
     HEX_LITERAL    shift, and go to state 38
     FLOAT_LITERAL  shift, and go to state 39
     NEGOP          shift, and go to state 40
-    '('            shift, and go to state 43
+    '('            shift, and go to state 44
 
-    expression  go to state 109
-    term        go to state 48
-    primary     go to state 49
+    expression  go to state 116
+    term        go to state 50
+    primary     go to state 51
 
 
-State 89
+State 94
 
-   39 relation: expression RELOP • expression
+   45 relation: expression RELOP • expression
 
     IDENTIFIER     shift, and go to state 34
     INT_LITERAL    shift, and go to state 35
@@ -1375,17 +1436,17 @@ State 89
     HEX_LITERAL    shift, and go to state 38
     FLOAT_LITERAL  shift, and go to state 39
     NEGOP          shift, and go to state 40
-    '('            shift, and go to state 43
+    '('            shift, and go to state 44
 
-    expression  go to state 110
-    term        go to state 48
-    primary     go to state 49
+    expression  go to state 117
+    term        go to state 50
+    primary     go to state 51
 
 
-State 90
+State 95
 
-   30 if_statement: IF condition THEN • statement_ elsif_clauses ENDIF
-   31             | IF condition THEN • statement_ elsif_clauses ELSE statement_ ENDIF
+   36 if_statement: IF condition THEN • statement_ elsif_clauses ENDIF
+   37             | IF condition THEN • statement_ elsif_clauses ELSE statement_ ENDIF
 
     error          shift, and go to state 33
     IDENTIFIER     shift, and go to state 34
@@ -1397,86 +1458,106 @@ State 90
     NEGOP          shift, and go to state 40
     WHEN           shift, and go to state 41
     IF             shift, and go to state 42
-    '('            shift, and go to state 43
+    FOLD           shift, and go to state 43
+    '('            shift, and go to state 44
 
-    statement_    go to state 111
-    statement     go to state 45
-    if_statement  go to state 46
-    expression    go to state 47
-    term          go to state 48
-    primary       go to state 49
-
-
-State 91
-
-   40 expression: '(' expression ')' •
-   58 primary: '(' expression ')' •
-
-    ADDOP     reduce using rule 40 (expression)
-    ADDOP     [reduce using rule 58 (primary)]
-    MULOP     reduce using rule 40 (expression)
-    MULOP     [reduce using rule 58 (primary)]
-    ANDOP     reduce using rule 40 (expression)
-    ANDOP     [reduce using rule 58 (primary)]
-    RELOP     reduce using rule 40 (expression)
-    RELOP     [reduce using rule 58 (primary)]
-    EXPOP     reduce using rule 40 (expression)
-    EXPOP     [reduce using rule 58 (primary)]
-    MODOP     reduce using rule 40 (expression)
-    MODOP     [reduce using rule 58 (primary)]
-    OROP      reduce using rule 40 (expression)
-    OROP      [reduce using rule 58 (primary)]
-    THEN      reduce using rule 40 (expression)
-    THEN      [reduce using rule 58 (primary)]
-    ';'       reduce using rule 40 (expression)
-    ';'       [reduce using rule 58 (primary)]
-    ','       reduce using rule 40 (expression)
-    ','       [reduce using rule 58 (primary)]
-    ':'       reduce using rule 40 (expression)
-    ':'       [reduce using rule 58 (primary)]
-    ')'       reduce using rule 40 (expression)
-    ')'       [reduce using rule 58 (primary)]
-    $default  reduce using rule 40 (expression)
-
-
-State 92
-
-   59 primary: INT_LITERAL •
-
-    $default  reduce using rule 59 (primary)
-
-
-State 93
-
-   60 primary: CHAR_LITERAL •
-
-    $default  reduce using rule 60 (primary)
-
-
-State 94
-
-   61 primary: REAL_LITERAL •
-
-    $default  reduce using rule 61 (primary)
-
-
-State 95
-
-   62 primary: HEX_LITERAL •
-
-    $default  reduce using rule 62 (primary)
+    statement_      go to state 118
+    statement       go to state 46
+    fold_statement  go to state 47
+    if_statement    go to state 48
+    expression      go to state 49
+    term            go to state 50
+    primary         go to state 51
 
 
 State 96
 
-   63 primary: FLOAT_LITERAL •
+   56 arithmetic_operator: ADDOP •
 
-    $default  reduce using rule 63 (primary)
+    $default  reduce using rule 56 (arithmetic_operator)
 
 
 State 97
 
-   58 primary: '(' • expression ')'
+   31 fold_statement: FOLD direction arithmetic_operator • list_choice ENDFOLD
+
+    IDENTIFIER  shift, and go to state 119
+    '('         shift, and go to state 120
+
+    list         go to state 121
+    list_choice  go to state 122
+
+
+State 98
+
+   46 expression: '(' expression ')' •
+   64 primary: '(' expression ')' •
+
+    ADDOP     reduce using rule 46 (expression)
+    ADDOP     [reduce using rule 64 (primary)]
+    MULOP     reduce using rule 46 (expression)
+    MULOP     [reduce using rule 64 (primary)]
+    ANDOP     reduce using rule 46 (expression)
+    ANDOP     [reduce using rule 64 (primary)]
+    RELOP     reduce using rule 46 (expression)
+    RELOP     [reduce using rule 64 (primary)]
+    EXPOP     reduce using rule 46 (expression)
+    EXPOP     [reduce using rule 64 (primary)]
+    MODOP     reduce using rule 46 (expression)
+    MODOP     [reduce using rule 64 (primary)]
+    OROP      reduce using rule 46 (expression)
+    OROP      [reduce using rule 64 (primary)]
+    THEN      reduce using rule 46 (expression)
+    THEN      [reduce using rule 64 (primary)]
+    ';'       reduce using rule 46 (expression)
+    ';'       [reduce using rule 64 (primary)]
+    ','       reduce using rule 46 (expression)
+    ','       [reduce using rule 64 (primary)]
+    ':'       reduce using rule 46 (expression)
+    ':'       [reduce using rule 64 (primary)]
+    ')'       reduce using rule 46 (expression)
+    ')'       [reduce using rule 64 (primary)]
+    $default  reduce using rule 46 (expression)
+
+
+State 99
+
+   65 primary: INT_LITERAL •
+
+    $default  reduce using rule 65 (primary)
+
+
+State 100
+
+   66 primary: CHAR_LITERAL •
+
+    $default  reduce using rule 66 (primary)
+
+
+State 101
+
+   67 primary: REAL_LITERAL •
+
+    $default  reduce using rule 67 (primary)
+
+
+State 102
+
+   68 primary: HEX_LITERAL •
+
+    $default  reduce using rule 68 (primary)
+
+
+State 103
+
+   69 primary: FLOAT_LITERAL •
+
+    $default  reduce using rule 69 (primary)
+
+
+State 104
+
+   64 primary: '(' • expression ')'
 
     IDENTIFIER     shift, and go to state 34
     INT_LITERAL    shift, and go to state 35
@@ -1485,174 +1566,166 @@ State 97
     HEX_LITERAL    shift, and go to state 38
     FLOAT_LITERAL  shift, and go to state 39
     NEGOP          shift, and go to state 40
-    '('            shift, and go to state 43
+    '('            shift, and go to state 44
 
-    expression  go to state 112
-    term        go to state 48
-    primary     go to state 49
-
-
-State 98
-
-   48 expression: expression ADDOP term •
-   54 term: term • EXPOP primary
-   55     | term • MULOP primary
-   56     | term • MODOP primary
-
-    MULOP  shift, and go to state 75
-    EXPOP  shift, and go to state 76
-    MODOP  shift, and go to state 77
-
-    MULOP     [reduce using rule 48 (expression)]
-    EXPOP     [reduce using rule 48 (expression)]
-    MODOP     [reduce using rule 48 (expression)]
-    $default  reduce using rule 48 (expression)
+    expression  go to state 123
+    term        go to state 50
+    primary     go to state 51
 
 
-State 99
+State 105
 
-   41 expression: expression • arithmetic_operator expression
-   41           | expression arithmetic_operator expression •
-   48           | expression • ADDOP term
+   54 expression: expression ADDOP term •
+   60 term: term • EXPOP primary
+   61     | term • MULOP primary
+   62     | term • MODOP primary
 
-    ADDOP  shift, and go to state 70
-    MULOP  shift, and go to state 71
-    EXPOP  shift, and go to state 72
-    MODOP  shift, and go to state 73
+    MULOP  shift, and go to state 80
+    EXPOP  shift, and go to state 81
+    MODOP  shift, and go to state 82
 
-    ADDOP     [reduce using rule 41 (expression)]
-    MULOP     [reduce using rule 41 (expression)]
-    EXPOP     [reduce using rule 41 (expression)]
-    MODOP     [reduce using rule 41 (expression)]
-    $default  reduce using rule 41 (expression)
-
-    arithmetic_operator  go to state 74
+    MULOP     [reduce using rule 54 (expression)]
+    EXPOP     [reduce using rule 54 (expression)]
+    MODOP     [reduce using rule 54 (expression)]
+    $default  reduce using rule 54 (expression)
 
 
-State 100
+State 106
 
-   55 term: term MULOP primary •
+   47 expression: expression • arithmetic_operator expression
+   47           | expression arithmetic_operator expression •
+   54           | expression • ADDOP term
 
-    $default  reduce using rule 55 (term)
+    ADDOP  shift, and go to state 75
+    MULOP  shift, and go to state 76
+    EXPOP  shift, and go to state 77
+    MODOP  shift, and go to state 78
+
+    ADDOP     [reduce using rule 47 (expression)]
+    MULOP     [reduce using rule 47 (expression)]
+    EXPOP     [reduce using rule 47 (expression)]
+    MODOP     [reduce using rule 47 (expression)]
+    $default  reduce using rule 47 (expression)
+
+    arithmetic_operator  go to state 79
 
 
-State 101
+State 107
 
-   54 term: term EXPOP primary •
+   61 term: term MULOP primary •
 
-    $default  reduce using rule 54 (term)
-
-
-State 102
-
-   56 term: term MODOP primary •
-
-    $default  reduce using rule 56 (term)
+    $default  reduce using rule 61 (term)
 
 
-State 103
+State 108
+
+   60 term: term EXPOP primary •
+
+    $default  reduce using rule 60 (term)
+
+
+State 109
+
+   62 term: term MODOP primary •
+
+    $default  reduce using rule 62 (term)
+
+
+State 110
 
    19 variable: IDENTIFIER ':' LIST OF type IS • list ';'
 
-    '('  shift, and go to state 113
+    '('  shift, and go to state 120
 
-    list  go to state 114
+    list  go to state 124
 
 
-State 104
+State 111
 
    18 variable: IDENTIFIER ':' type IS statement ';' •
 
     $default  reduce using rule 18 (variable)
 
 
-State 105
-
-   64 primary: IDENTIFIER '(' expression ')' •
-
-    $default  reduce using rule 64 (primary)
-
-
-State 106
-
-   38 relation: '(' condition ')' •
-
-    $default  reduce using rule 38 (relation)
-
-
-State 107
-
-   34 condition: condition ANDOP relation •
-
-    $default  reduce using rule 34 (condition)
-
-
-State 108
-
-   35 condition: condition OROP relation •
-
-    $default  reduce using rule 35 (condition)
-
-
-State 109
-
-   28 statement: WHEN condition ',' expression • ':' expression
-   41 expression: expression • arithmetic_operator expression
-   48           | expression • ADDOP term
-
-    ADDOP  shift, and go to state 70
-    MULOP  shift, and go to state 71
-    EXPOP  shift, and go to state 72
-    MODOP  shift, and go to state 73
-    ':'    shift, and go to state 115
-
-    arithmetic_operator  go to state 74
-
-
-State 110
-
-   39 relation: expression RELOP expression •
-   41 expression: expression • arithmetic_operator expression
-   48           | expression • ADDOP term
-
-    ADDOP  shift, and go to state 70
-    MULOP  shift, and go to state 71
-    EXPOP  shift, and go to state 72
-    MODOP  shift, and go to state 73
-
-    $default  reduce using rule 39 (relation)
-
-    arithmetic_operator  go to state 74
-
-
-State 111
-
-   30 if_statement: IF condition THEN statement_ • elsif_clauses ENDIF
-   31             | IF condition THEN statement_ • elsif_clauses ELSE statement_ ENDIF
-
-    ELSIF  shift, and go to state 116
-
-    $default  reduce using rule 32 (elsif_clauses)
-
-    elsif_clauses  go to state 117
-
-
 State 112
 
-   41 expression: expression • arithmetic_operator expression
-   48           | expression • ADDOP term
-   58 primary: '(' expression • ')'
+   70 primary: IDENTIFIER '(' expression ')' •
 
-    ADDOP  shift, and go to state 70
-    MULOP  shift, and go to state 71
-    EXPOP  shift, and go to state 72
-    MODOP  shift, and go to state 73
-    ')'    shift, and go to state 118
-
-    arithmetic_operator  go to state 74
+    $default  reduce using rule 70 (primary)
 
 
 State 113
+
+   44 relation: '(' condition ')' •
+
+    $default  reduce using rule 44 (relation)
+
+
+State 114
+
+   40 condition: condition ANDOP relation •
+
+    $default  reduce using rule 40 (condition)
+
+
+State 115
+
+   41 condition: condition OROP relation •
+
+    $default  reduce using rule 41 (condition)
+
+
+State 116
+
+   28 statement: WHEN condition ',' expression • ':' expression
+   47 expression: expression • arithmetic_operator expression
+   54           | expression • ADDOP term
+
+    ADDOP  shift, and go to state 75
+    MULOP  shift, and go to state 76
+    EXPOP  shift, and go to state 77
+    MODOP  shift, and go to state 78
+    ':'    shift, and go to state 125
+
+    arithmetic_operator  go to state 79
+
+
+State 117
+
+   45 relation: expression RELOP expression •
+   47 expression: expression • arithmetic_operator expression
+   54           | expression • ADDOP term
+
+    ADDOP  shift, and go to state 75
+    MULOP  shift, and go to state 76
+    EXPOP  shift, and go to state 77
+    MODOP  shift, and go to state 78
+
+    $default  reduce using rule 45 (relation)
+
+    arithmetic_operator  go to state 79
+
+
+State 118
+
+   36 if_statement: IF condition THEN statement_ • elsif_clauses ENDIF
+   37             | IF condition THEN statement_ • elsif_clauses ELSE statement_ ENDIF
+
+    ELSIF  shift, and go to state 126
+
+    $default  reduce using rule 38 (elsif_clauses)
+
+    elsif_clauses  go to state 127
+
+
+State 119
+
+   35 list_choice: IDENTIFIER •
+
+    $default  reduce using rule 35 (list_choice)
+
+
+State 120
 
    20 list: '(' • expressions ')'
 
@@ -1663,22 +1736,51 @@ State 113
     HEX_LITERAL    shift, and go to state 38
     FLOAT_LITERAL  shift, and go to state 39
     NEGOP          shift, and go to state 40
-    '('            shift, and go to state 43
+    '('            shift, and go to state 44
 
-    expressions  go to state 119
-    expression   go to state 120
-    term         go to state 48
-    primary      go to state 49
+    expressions  go to state 128
+    expression   go to state 129
+    term         go to state 50
+    primary      go to state 51
 
 
-State 114
+State 121
+
+   34 list_choice: list •
+
+    $default  reduce using rule 34 (list_choice)
+
+
+State 122
+
+   31 fold_statement: FOLD direction arithmetic_operator list_choice • ENDFOLD
+
+    ENDFOLD  shift, and go to state 130
+
+
+State 123
+
+   47 expression: expression • arithmetic_operator expression
+   54           | expression • ADDOP term
+   64 primary: '(' expression • ')'
+
+    ADDOP  shift, and go to state 75
+    MULOP  shift, and go to state 76
+    EXPOP  shift, and go to state 77
+    MODOP  shift, and go to state 78
+    ')'    shift, and go to state 131
+
+    arithmetic_operator  go to state 79
+
+
+State 124
 
    19 variable: IDENTIFIER ':' LIST OF type IS list • ';'
 
-    ';'  shift, and go to state 121
+    ';'  shift, and go to state 132
 
 
-State 115
+State 125
 
    28 statement: WHEN condition ',' expression ':' • expression
 
@@ -1689,16 +1791,16 @@ State 115
     HEX_LITERAL    shift, and go to state 38
     FLOAT_LITERAL  shift, and go to state 39
     NEGOP          shift, and go to state 40
-    '('            shift, and go to state 43
+    '('            shift, and go to state 44
 
-    expression  go to state 122
-    term        go to state 48
-    primary     go to state 49
+    expression  go to state 133
+    term        go to state 50
+    primary     go to state 51
 
 
-State 116
+State 126
 
-   33 elsif_clauses: ELSIF • condition THEN statement_ elsif_clauses
+   39 elsif_clauses: ELSIF • condition THEN statement_ elsif_clauses
 
     IDENTIFIER     shift, and go to state 34
     INT_LITERAL    shift, and go to state 35
@@ -1707,94 +1809,101 @@ State 116
     HEX_LITERAL    shift, and go to state 38
     FLOAT_LITERAL  shift, and go to state 39
     NEGOP          shift, and go to state 40
-    NOTOP          shift, and go to state 61
-    '('            shift, and go to state 62
+    NOTOP          shift, and go to state 63
+    '('            shift, and go to state 64
 
-    condition   go to state 123
-    relation    go to state 64
-    expression  go to state 65
-    term        go to state 48
-    primary     go to state 49
-
-
-State 117
-
-   30 if_statement: IF condition THEN statement_ elsif_clauses • ENDIF
-   31             | IF condition THEN statement_ elsif_clauses • ELSE statement_ ENDIF
-
-    ELSE   shift, and go to state 124
-    ENDIF  shift, and go to state 125
+    condition   go to state 134
+    relation    go to state 66
+    expression  go to state 67
+    term        go to state 50
+    primary     go to state 51
 
 
-State 118
+State 127
 
-   58 primary: '(' expression ')' •
+   36 if_statement: IF condition THEN statement_ elsif_clauses • ENDIF
+   37             | IF condition THEN statement_ elsif_clauses • ELSE statement_ ENDIF
 
-    $default  reduce using rule 58 (primary)
+    ELSE   shift, and go to state 135
+    ENDIF  shift, and go to state 136
 
 
-State 119
+State 128
 
    20 list: '(' expressions • ')'
    21 expressions: expressions • ',' expression
 
-    ','  shift, and go to state 126
-    ')'  shift, and go to state 127
+    ','  shift, and go to state 137
+    ')'  shift, and go to state 138
 
 
-State 120
+State 129
 
    22 expressions: expression •
-   41 expression: expression • arithmetic_operator expression
-   48           | expression • ADDOP term
+   47 expression: expression • arithmetic_operator expression
+   54           | expression • ADDOP term
 
-    ADDOP  shift, and go to state 70
-    MULOP  shift, and go to state 71
-    EXPOP  shift, and go to state 72
-    MODOP  shift, and go to state 73
+    ADDOP  shift, and go to state 75
+    MULOP  shift, and go to state 76
+    EXPOP  shift, and go to state 77
+    MODOP  shift, and go to state 78
 
     $default  reduce using rule 22 (expressions)
 
-    arithmetic_operator  go to state 74
+    arithmetic_operator  go to state 79
 
 
-State 121
+State 130
+
+   31 fold_statement: FOLD direction arithmetic_operator list_choice ENDFOLD •
+
+    $default  reduce using rule 31 (fold_statement)
+
+
+State 131
+
+   64 primary: '(' expression ')' •
+
+    $default  reduce using rule 64 (primary)
+
+
+State 132
 
    19 variable: IDENTIFIER ':' LIST OF type IS list ';' •
 
     $default  reduce using rule 19 (variable)
 
 
-State 122
+State 133
 
    28 statement: WHEN condition ',' expression ':' expression •
-   41 expression: expression • arithmetic_operator expression
-   48           | expression • ADDOP term
+   47 expression: expression • arithmetic_operator expression
+   54           | expression • ADDOP term
 
-    ADDOP  shift, and go to state 70
-    MULOP  shift, and go to state 71
-    EXPOP  shift, and go to state 72
-    MODOP  shift, and go to state 73
+    ADDOP  shift, and go to state 75
+    MULOP  shift, and go to state 76
+    EXPOP  shift, and go to state 77
+    MODOP  shift, and go to state 78
 
     $default  reduce using rule 28 (statement)
 
-    arithmetic_operator  go to state 74
+    arithmetic_operator  go to state 79
 
 
-State 123
+State 134
 
-   33 elsif_clauses: ELSIF condition • THEN statement_ elsif_clauses
-   34 condition: condition • ANDOP relation
-   35          | condition • OROP relation
+   39 elsif_clauses: ELSIF condition • THEN statement_ elsif_clauses
+   40 condition: condition • ANDOP relation
+   41          | condition • OROP relation
 
-    ANDOP  shift, and go to state 86
-    OROP   shift, and go to state 87
-    THEN   shift, and go to state 128
+    ANDOP  shift, and go to state 91
+    OROP   shift, and go to state 92
+    THEN   shift, and go to state 139
 
 
-State 124
+State 135
 
-   31 if_statement: IF condition THEN statement_ elsif_clauses ELSE • statement_ ENDIF
+   37 if_statement: IF condition THEN statement_ elsif_clauses ELSE • statement_ ENDIF
 
     error          shift, and go to state 33
     IDENTIFIER     shift, and go to state 34
@@ -1806,24 +1915,26 @@ State 124
     NEGOP          shift, and go to state 40
     WHEN           shift, and go to state 41
     IF             shift, and go to state 42
-    '('            shift, and go to state 43
+    FOLD           shift, and go to state 43
+    '('            shift, and go to state 44
 
-    statement_    go to state 129
-    statement     go to state 45
-    if_statement  go to state 46
-    expression    go to state 47
-    term          go to state 48
-    primary       go to state 49
-
-
-State 125
-
-   30 if_statement: IF condition THEN statement_ elsif_clauses ENDIF •
-
-    $default  reduce using rule 30 (if_statement)
+    statement_      go to state 140
+    statement       go to state 46
+    fold_statement  go to state 47
+    if_statement    go to state 48
+    expression      go to state 49
+    term            go to state 50
+    primary         go to state 51
 
 
-State 126
+State 136
+
+   36 if_statement: IF condition THEN statement_ elsif_clauses ENDIF •
+
+    $default  reduce using rule 36 (if_statement)
+
+
+State 137
 
    21 expressions: expressions ',' • expression
 
@@ -1834,23 +1945,23 @@ State 126
     HEX_LITERAL    shift, and go to state 38
     FLOAT_LITERAL  shift, and go to state 39
     NEGOP          shift, and go to state 40
-    '('            shift, and go to state 43
+    '('            shift, and go to state 44
 
-    expression  go to state 130
-    term        go to state 48
-    primary     go to state 49
+    expression  go to state 141
+    term        go to state 50
+    primary     go to state 51
 
 
-State 127
+State 138
 
    20 list: '(' expressions ')' •
 
     $default  reduce using rule 20 (list)
 
 
-State 128
+State 139
 
-   33 elsif_clauses: ELSIF condition THEN • statement_ elsif_clauses
+   39 elsif_clauses: ELSIF condition THEN • statement_ elsif_clauses
 
     error          shift, and go to state 33
     IDENTIFIER     shift, and go to state 34
@@ -1862,59 +1973,61 @@ State 128
     NEGOP          shift, and go to state 40
     WHEN           shift, and go to state 41
     IF             shift, and go to state 42
-    '('            shift, and go to state 43
+    FOLD           shift, and go to state 43
+    '('            shift, and go to state 44
 
-    statement_    go to state 131
-    statement     go to state 45
-    if_statement  go to state 46
-    expression    go to state 47
-    term          go to state 48
-    primary       go to state 49
-
-
-State 129
-
-   31 if_statement: IF condition THEN statement_ elsif_clauses ELSE statement_ • ENDIF
-
-    ENDIF  shift, and go to state 132
+    statement_      go to state 142
+    statement       go to state 46
+    fold_statement  go to state 47
+    if_statement    go to state 48
+    expression      go to state 49
+    term            go to state 50
+    primary         go to state 51
 
 
-State 130
+State 140
+
+   37 if_statement: IF condition THEN statement_ elsif_clauses ELSE statement_ • ENDIF
+
+    ENDIF  shift, and go to state 143
+
+
+State 141
 
    21 expressions: expressions ',' expression •
-   41 expression: expression • arithmetic_operator expression
-   48           | expression • ADDOP term
+   47 expression: expression • arithmetic_operator expression
+   54           | expression • ADDOP term
 
-    ADDOP  shift, and go to state 70
-    MULOP  shift, and go to state 71
-    EXPOP  shift, and go to state 72
-    MODOP  shift, and go to state 73
+    ADDOP  shift, and go to state 75
+    MULOP  shift, and go to state 76
+    EXPOP  shift, and go to state 77
+    MODOP  shift, and go to state 78
 
     $default  reduce using rule 21 (expressions)
 
-    arithmetic_operator  go to state 74
+    arithmetic_operator  go to state 79
 
 
-State 131
+State 142
 
-   33 elsif_clauses: ELSIF condition THEN statement_ • elsif_clauses
+   39 elsif_clauses: ELSIF condition THEN statement_ • elsif_clauses
 
-    ELSIF  shift, and go to state 116
+    ELSIF  shift, and go to state 126
 
-    $default  reduce using rule 32 (elsif_clauses)
+    $default  reduce using rule 38 (elsif_clauses)
 
-    elsif_clauses  go to state 133
-
-
-State 132
-
-   31 if_statement: IF condition THEN statement_ elsif_clauses ELSE statement_ ENDIF •
-
-    $default  reduce using rule 31 (if_statement)
+    elsif_clauses  go to state 144
 
 
-State 133
+State 143
 
-   33 elsif_clauses: ELSIF condition THEN statement_ elsif_clauses •
+   37 if_statement: IF condition THEN statement_ elsif_clauses ELSE statement_ ENDIF •
 
-    $default  reduce using rule 33 (elsif_clauses)
+    $default  reduce using rule 37 (if_statement)
+
+
+State 144
+
+   39 elsif_clauses: ELSIF condition THEN statement_ elsif_clauses •
+
+    $default  reduce using rule 39 (elsif_clauses)

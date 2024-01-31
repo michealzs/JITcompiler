@@ -71,3 +71,19 @@ double evaluateRelational(double left, Operators operator_, double right) {
 
 
 
+double fold_right(Operators op, vector<double>* list) {
+    double result = (list->empty()) ? 0 : list->back(); // Assuming a non-empty list
+    for (size_t i = list->size() - 1; i-- > 0; ) {
+        result = evaluateArithmetic(list->at(i), op, result);
+    }
+    return result;
+}
+
+
+double fold_left(Operators op, vector<double>* list) {
+    double result = (list->empty()) ? 0 : list->front(); // Assuming a non-empty list
+    for (size_t i = 1; i < list->size(); ++i) {
+        result = evaluateArithmetic(result, op, list->at(i));
+    }
+    return result;
+}

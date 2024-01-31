@@ -19,9 +19,6 @@ using namespace std;
 #include "listing.h"
 #include "symbols.h"
 
-double* params;
-int countParams = 0; 
-
 int yylex();
 void yyerror(const char* message);
 double extract_element(CharPtr list_name, double subscript);
@@ -29,12 +26,16 @@ double extract_element(CharPtr list_name, double subscript);
 Symbols<double> scalars;
 Symbols<vector<double>*> lists;
 double result;
+double* params;
+int countParams = 0; 
+vector<double>* listValue; 
 
 %}
 
 %define parse.error verbose
 
 %union {
+	int direction;
 	int boolean_value;
 	CharPtr iden;
 	Operators oper;
@@ -53,13 +54,13 @@ double result;
 
 %token BEGIN_ CASE CHARACTER ELSE END ENDSWITCH FUNCTION INTEGER IS LIST OF OTHERS RETURNS SWITCH WHEN REAL IF THEN ELSIF ENDIF FOLD ENDFOLD LEFT RIGHT 
 
-%type <value> body statement_ statement  expression term primary condition relation if_statement elsif_clauses
+%type <value> body statement_ statement  expression term primary condition relation if_statement elsif_clauses fold_statement
 
-%type <list> list expressions
+%type <list> list expressions list_choice
 
 %type <oper> arithmetic_operator
 
-
+%type <direction> direction
 
 %%
 
@@ -117,7 +118,19 @@ statement:
 	WHEN condition {$$ = $2;}|
 	expression |
 	WHEN condition ',' expression ':' expression {$$ = $2 ? $4 : $6;} | 
-	if_statement ;
+	if_statement | fold_statement
+	;
+
+fold_statement:
+    FOLD direction arithmetic_operator list_choice ENDFOLD { $$ = ($2 == LEFT) ? fold_left($3, $4) : fold_right($3, $4); } ; 
+
+direction:
+    LEFT { $$ = LEFT; } | RIGHT { $$ = RIGHT; } ;
+
+
+list_choice:
+    list { $$ = $1; } | 
+    IDENTIFIER { lists.find($1, listValue); $$ = listValue; };;
 
 if_statement:
     IF condition THEN statement_ elsif_clauses ENDIF { $$ = $2 ? $4 : $5; }|
