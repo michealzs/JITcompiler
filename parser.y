@@ -41,6 +41,8 @@ vector<double>* listValue;
 	Operators oper;
 	double value;
 	vector<double>* list;
+	Case aCase;
+    Case casesArray[MAX_CASES];
 }
 
 
@@ -62,6 +64,9 @@ vector<double>* listValue;
 
 %type <direction> direction
 
+%type <aCase> case
+
+%type <casesArray> cases
 %%
 
 function:	
@@ -118,8 +123,39 @@ statement:
 	WHEN condition {$$ = $2;}|
 	expression |
 	WHEN condition ',' expression ':' expression {$$ = $2 ? $4 : $6;} | 
-	if_statement | fold_statement
+	if_statement | fold_statement | 
+	SWITCH expression IS cases OTHERS ARROW statement ';' ENDSWITCH {
+        double switchExprValue = $2;
+        Case *caseArray = $4;
+        double result = $7; 
+        for (int i = 0; i < MAX_CASES && caseArray[i].caseValue != 0; ++i) {
+            result = (caseArray[i].caseValue == switchExprValue) ? caseArray[i].statementValue : result;
+        }
+
+        $$ = result;
+    }
 	;
+
+cases:
+	cases case {
+        int i = 0;
+        while (i < MAX_CASES && $1[i].caseValue != 0) ++i;
+        if (i < MAX_CASES) {
+            $1[i] = $2;
+            for (int i = 0; i < MAX_CASES; ++i) {
+    			$$[i] = $1[i];
+			}
+        }
+    }|
+	%empty {
+        Case emptyCases[MAX_CASES] = {{0, 0}};
+        for (int i = 0; i < MAX_CASES; ++i) {
+    		$$[i] = emptyCases[i];
+		}
+    }; ;
+
+case:
+	CASE INT_LITERAL ARROW statement ';' { $$ = (Case){static_cast<int>($2), $4}; };
 
 fold_statement:
     FOLD direction arithmetic_operator list_choice ENDFOLD { $$ = ($2 == LEFT) ? fold_left($3, $4) : fold_right($3, $4); } ; 

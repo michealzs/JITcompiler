@@ -111,8 +111,10 @@ union YYSTYPE
 	Operators oper;
 	double value;
 	vector<double>* list;
+	Case aCase;
+    Case casesArray[MAX_CASES];
 
-#line 116 "parser.tab.h"
+#line 118 "parser.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
