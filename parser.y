@@ -50,13 +50,13 @@ vector<double>* listValue;
 
 %token <value> INT_LITERAL CHAR_LITERAL REAL_LITERAL HEX_LITERAL FLOAT_LITERAL
 
-%token <oper> ADDOP MULOP ANDOP RELOP EXPOP REMOP NEGOP MODOP NOTOP OROP
+%token <oper> ADDOP MULOP ANDOP RELOP EXPOP REMOP NEGOP NOTOP OROP
 
 %token ARROW
 
 %token BEGIN_ CASE CHARACTER ELSE END ENDSWITCH FUNCTION INTEGER IS LIST OF OTHERS RETURNS SWITCH WHEN REAL IF THEN ELSIF ENDIF FOLD ENDFOLD LEFT RIGHT 
 
-%type <value> body statement_ statement  expression term primary condition relation if_statement elsif_clauses fold_statement
+%type <value> body statement_ statement  expression term primary condition relation if_statement elsif_clauses fold_statement factor unary exponent
 
 %type <list> list expressions list_choice
 
@@ -67,6 +67,8 @@ vector<double>* listValue;
 %type <aCase> case
 
 %type <casesArray> cases
+
+
 %%
 
 function:	
@@ -200,13 +202,24 @@ expression:
 	term ;
 
 arithmetic_operator:
-    ADDOP | MULOP | MODOP | EXPOP ;
+    ADDOP | EXPOP | MULOP | REMOP | NEGOP ;
 
 term:
-	term EXPOP primary {$$ = evaluateArithmetic($1, $2, $3);}  |
-	term MULOP primary {$$ = evaluateArithmetic($1, $2, $3);}  |
-	term MODOP primary {$$ = evaluateArithmetic($1, $2, $3);}  |
-	primary ;
+	term ADDOP factor {$$ = evaluateArithmetic($1, $2, $3);}  |
+	factor ;
+
+factor:
+	factor MULOP exponent {$$ = evaluateArithmetic($1, $2, $3);}|
+	factor REMOP exponent { $$ = fmod($1 , $3); } |
+	exponent ;
+
+exponent:
+	unary |
+	unary EXPOP exponent { $$ = pow($1, $3);};
+
+unary:
+	NOTOP primary {$$ = $2;} |
+	primary;
 
 primary:
 	'(' expression ')' {$$ = $2;} |

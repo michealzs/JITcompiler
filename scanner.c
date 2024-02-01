@@ -904,7 +904,7 @@ YY_RULE_SETUP
 case 8:
 YY_RULE_SETUP
 #line 42 "scanner.l"
-{ ECHO; yylval.oper = MODULO; return(MODOP); }
+{ ECHO; yylval.oper = MODULO; return(REMOP); }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP

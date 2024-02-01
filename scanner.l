@@ -39,7 +39,7 @@ hex 	 	#[0-9A-Fa-f]+
 "+"      	{ ECHO; yylval.oper = ADD; return(ADDOP);  }
 "-"        { ECHO; yylval.oper = SUBTRACT; return(ADDOP); }
 "/"        { ECHO; yylval.oper = DIVIDE; return(MULOP); }
-"%"        { ECHO; yylval.oper = MODULO; return(MODOP); }
+"%"        { ECHO; yylval.oper = MODULO; return(REMOP); }
 "^"        { ECHO; yylval.oper = EXPONENT; return(EXPOP); }
 "~"        { ECHO; yylval.oper = NEGATE; return(NEGOP); }
 "*"      { ECHO; yylval.oper = MULTIPLY; return(MULOP); }
