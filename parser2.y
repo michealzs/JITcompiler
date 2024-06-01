@@ -44,7 +44,7 @@ double result;
 
 %token <value> INT_LITERAL CHAR_LITERAL REAL_LITERAL HEX_LITERAL
 
-%token <oper> ADDOP MULOP ANDOP RELOP EXPOP REMOP NEGOP MODOP
+%token <oper> ADDOP MULOP ANDOP RELOP EXPOP REMOP NEGOP REMOP
 
 %token ARROW
 
@@ -160,7 +160,7 @@ logical_operator:
     ANDOP | OROP;
 
 arithmetic_operator:
-    ADDOP | MULOP | MODOP | EXPOP ;
+    ADDOP | MULOP | REMOP | EXPOP ;
 
 
 %%

@@ -3,12 +3,16 @@
 #include <cstdio>
 #include <string>
 #include <vector>
+#include <iostream>
 
 using namespace std;
 
 #include "values.h"
 #include "listing.h"
 #include "tokens.h"
+
+int hexToInt(const char* hexStr);
+char charLiteralToChar(const char* charLit);
 
 %}
 
@@ -35,7 +39,7 @@ hex 	 	#[0-9A-Fa-f]+
 "+"      	{ ECHO; yylval.oper = ADD; return(ADDOP);  }
 "-"        { ECHO; yylval.oper = SUBTRACT; return(ADDOP); }
 "/"        { ECHO; yylval.oper = DIVIDE; return(MULOP); }
-"%"        { ECHO; yylval.oper = MODULO; return(MODOP); }
+"%"        { ECHO; yylval.oper = MODULO; return(REMOP); }
 "^"        { ECHO; yylval.oper = EXPONENT; return(EXPOP); }
 "~"        { ECHO; yylval.oper = NEGATE; return(NEGOP); }
 "*"      { ECHO; yylval.oper = MULTIPLY; return(MULOP); }
@@ -73,17 +77,41 @@ others      { ECHO; return(OTHERS); }
 returns     { ECHO; return(RETURNS); }
 switch      { ECHO; return(SWITCH); }
 when     { ECHO; return(WHEN); }
-{real}      { ECHO; return(REAL_LITERAL); } 
+{real}      { ECHO; yylval.value = atof(yytext); return REAL_LITERAL; } 
 {id}     { ECHO; yylval.iden = (CharPtr)malloc(yyleng + 1); 
 			strcpy(yylval.iden, yytext); return(IDENTIFIER);}
 {dec}    { ECHO; yylval.value = atoi(yytext); return(INT_LITERAL);  }
 {char}      { ECHO; yylval.value = yytext[1]; return(CHAR_LITERAL); }
 {punc}      { ECHO; return(yytext[0]); }
 .     		{ ECHO; appendError(LEXICAL, yytext); }
-{hex} 		{ ECHO; return(HEX_LITERAL); }
-'\\[btnf]'  { ECHO; return(CHAR_LITERAL); }
+{hex} 		{ ECHO; yylval.value = hexToInt(yytext); return HEX_LITERAL;  }
+{float}		{ ECHO; yylval.value = atof(yytext); return FLOAT_LITERAL;}
+'\\[btnfr]'  { ECHO; yylval.value = charLiteralToChar(yytext); return CHAR_LITERAL; }
 
 
 %%
 
+int hexToInt(const char* hexStr) {
+	int hexint = strtol(hexStr + 1, NULL, 16); 
+	std::cout << hexint <<std::endl;
+    return hexint;
+}
+
+char charLiteralToChar(const char* charLit) {
+    if (charLit[1] != '\\') {
+        return charLit[1]; 
+    } else {
+        switch (charLit[2]) {
+            case 'b': return '\b';
+            case 't': return '\t';
+            case 'n': return '\n';
+            case 'f': return '\f';
+            case 'r': return '\r';
+            case '\'': return '\'';
+            case '"': return '\"';
+            case '\\': return '\\';
+            default: return '\0'; 
+        }
+    }
+}
 
