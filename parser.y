@@ -1,9 +1,3 @@
-/* CMSC 430 Compiler Theory and Design
-   Project 3 Skeleton
-   UMGC CITE
-   Summer 2023
-   
-   Project 3 Parser with semantic actions for the interpreter */
 
 %{
 
