@@ -1,9 +1,3 @@
-/* CMSC 430 Compiler Theory and Design
-   Project 2 Skeleton
-   UMGC CITE
-   Summer 2023 
-
-   Project 2 Parser */
 
 %{
 
