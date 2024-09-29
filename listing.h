@@ -1,7 +1,3 @@
-// CMSC 430 Compiler Theory and Design
-// Project 2 Skeleton
-// UMGC CITE
-// Summer 2023
 
 // This file contains the function prototypes for the functions that produce
 // the compilation listing
