@@ -1,7 +1,4 @@
-// CMSC 430 Compiler Theory and Design
-// Project 3 Skeleton
-// UMGC CITE
-// Summer 2023
+
 
 // This file contains the bodies of the evaluation functions
 
