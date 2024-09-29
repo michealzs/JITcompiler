@@ -1,7 +1,3 @@
-// CMSC 430 Compiler Theory and Design
-// Project 3 Complete
-// UMGC CITE
-// Summer 2023
 
 // This file contains the template symbol table
 
